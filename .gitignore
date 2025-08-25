@@ -1,0 +1,25 @@
+build/
+out/
+
+# Object file
+*.o
+*.opendb
+*.dll
+*.exe
+*.so
+*.obj
+*.tlog
+*.pdb
+
+
+# Ada Library Information
+*.db
+#ignore packages
+packages
+Workspaces/Nikopolis18/NikoPolis/**/Win32/
+Workspaces/Nikopolis18/NikoPolis/**/x64/
+TestReults/
+obj/
+.vs/*
+.env
+CmakeFiles/*
