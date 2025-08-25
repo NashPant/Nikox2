@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <!--Visualizers for data structures-->
+  <Type Name = "date::month">
+    <DisplayString>{{tzMonth {(TP::date_time::detail::MonthDebugView)m_,en}}</DisplayString>
+  </Type>
+  <Type Name = "TPDate">
+    <DisplayString>{{TPDate {Day_}-{Month_,en}-{Year_}}</DisplayString>
+    <Expand>
+      <Item Name ="TPDay">Day_</Item>
+      <Item Name ="TPWeekday"> WeekDay_,en </Item>
+      <Item Name ="TPMonth"> Month_,en </Item>
+      <Item Name ="TPYear"> Year_ </Item>
+    </Expand>
+  </Type>
+  <Type Name = "TP::date_time::Date">
+    <Intrinsic Name="serialdays" Expression="serial_._MyDur._MyRep"/>
+    <Intrinsic Name="z" Expression="serialdays()+719468"/>
+    <Intrinsic Name="era" Expression="(int)((z()>=0?z():z()-146096)/146097)"/>
+    <Intrinsic Name="doe" Expression="(unsigned)(z()-era()*146097)"/>
+    <Intrinsic Name="yoe" Expression="(doe()-doe()/1460+doe()/36524-doe()/146096)/365"/>
+    <Intrinsic Name="doy" Expression="doe()-(365*yoe()+yoe()/4-yoe()/100)"/>
+    <Intrinsic Name="mp" Expression="(5*doy()+2)/153"/>
+    <Intrinsic Name="d" Expression="doy()-(153*mp()+2)/5+1"/>
+    <Intrinsic Name="m" Expression="(mp()+(mp()&lt;10?3:-9))"/>
+    <Intrinsic Name="y" Expression="(int)(yoe())+era()*400+(int)(m()&lt;3)"/>
+    <Intrinsic Name="wd" Expression="((unsigned)(serialdays()>=-4?(serialdays()+4)%7 :(serialdays()+5)%7 + 6))"/>
+    <DisplayString>{{tzdate {d()}-{m(),en}-{y()}}</DisplayString>
+    <Expand>
+      <Item Name ="serialdays">serialdays()</Item>
+      <Item Name ="doy">doy()</Item>
+      <Item Name ="tzday">d()</Item>
+      <Item Name ="month">m()</Item>
+      <Item Name ="year">y()</Item>
+      <Item Name ="weekday">wd()</Item>
+    </Expand>
+  </Type>
+  <Type Name = "date::month">
+    <DisplayString>{{tzMonth {m_,en}}</DisplayString>
+  </Type>
+  <Type Name = "TP::Currency">
+    <DisplayString>{code._Mydata,sb}</DisplayString>
+  </Type>
+  <Type Name = "TP::CurrencyPair">
+    <DisplayString>{left}/{right}</DisplayString>
+  </Type>
+</AutoVisualizer>

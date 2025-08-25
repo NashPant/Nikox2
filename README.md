@@ -9,10 +9,27 @@ pyNiko using pybind11 exposes most of the functions to python
 
 ## Getting Started
 
-### Dependencies
+### Setting Up vcpkg for automatic library management
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+1. Clone (or update) the vcpkg repo
+2. Go to the vcpkg folder and run bootstrap-vcpkg.bat
+3. Check the latest hash with git log -1 --pretty=format:%H
+    Add this to vckpg.json , for example:
+  {
+  "name": "myproject",
+  "version-string": "0.1.0",
+  "builtin-baseline": "4d3b16ef4e22b7a2f8459dbe85c709d221e9d83e",
+  "dependencies": [
+    "boost",
+    "fmt"
+  ]
+}
+4. IN CmakePresets.json add the following :
+  "cacheVariables": {
+  "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+  "VCPKG_MANIFEST_MODE": "ON"
+}
+1. 
 
 ### Installing
 
