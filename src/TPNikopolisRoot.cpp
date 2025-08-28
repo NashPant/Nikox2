@@ -1,9 +1,6 @@
 #include "TPNikopolisRoot.h"
-//#include <boost/filesystem.hpp>
 #include <stdlib.h>  
 #include <filesystem>
-//#include <boost/filesystem/path.hpp>
-//#include <boost/filesystem/operations.hpp>
 #include "TPTools/TPException.h"
 
 namespace fs = std::filesystem;
@@ -58,12 +55,15 @@ std::string TPNikopolisRoot::codeRoot()
 {
 	//using path = boost::filesystem::path;
 	// Normalize to absolute path in case compiler gave us a relative one
-	fs::path fullPath = fs::absolute(loc.file_name());
+	//fs::path fullPath = fs::absolute(loc.file_name());
 
-	// Get the directory of the source file
-	fs::path codeRoot = fullPath.remove_filename().parent_path();
+	//// Get the directory of the source file
+	//fs::path codeRoot = fullPath.remove_filename().parent_path();
 
-	return codeRoot.string();
+	//return codeRoot.string();
+
+	const std::filesystem::path codeRoot_ = std::filesystem::path(__FILE__).remove_filename().parent_path();
+	return codeRoot_.string();
 }
 
 std::string TPNikopolisRoot::confDir()
@@ -115,17 +115,17 @@ bool TPNikopolisRoot::setNikoHolidayEnv()
 	return true;
 }
 
-//bool TPNikopolisRoot::setNikoTemplateDirEnv()
-//{
-//	const char * nikoTemplateDir = getenv("NIKO_TEMPLATE_DIR");
-//	if (nikoTemplateDir == NULL) // define environmental Variable
-//	{
-//		setNewEnvVariable("NIKO_TEMPLATE_DIR", TemplatesDir());
-//		// check again
-//		nikoTemplateDir = getenv("NIKO_TEMPLATE_DIR");
-//		if (nikoTemplateDir == NULL)
-//			THROW("Cannot Set Template Directory to " + TemplatesDir());
-//		return true;
-//	}
-//	return true;
-//}
+bool TPNikopolisRoot::setNikoTemplateDirEnv()
+{
+	const char * nikoTemplateDir = getenv("NIKO_TEMPLATE_DIR");
+	if (nikoTemplateDir == NULL) // define environmental Variable
+	{
+		setNewEnvVariable("NIKO_TEMPLATE_DIR", TemplatesDir());
+		// check again
+		nikoTemplateDir = getenv("NIKO_TEMPLATE_DIR");
+		if (nikoTemplateDir == NULL)
+			THROW("Cannot Set Template Directory to " + TemplatesDir());
+		return true;
+	}
+	return true;
+}

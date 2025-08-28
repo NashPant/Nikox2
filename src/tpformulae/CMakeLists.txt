@@ -6,7 +6,15 @@ message(STATUS "Formulae Current Source Directory: ${CMAKE_CURRENT_SOURCE_DIR}")
 #message(STATUS "Formulae Source Directory: ${FRM_SRC_DIRECTORY}")
 file(GLOB FRM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
-add_library(tpformulae SHARED ${FRM_SOURCE_FILES})
+# add_library(tpformulae SHARED ${FRM_SOURCE_FILES})
+
+if(DEFINED TPSTATIC OR BUILD_TPTOOLS_STATIC)
+    message(STATUC "tpformulae compiling Static Lib")
+    add_library(tpformulae STATIC ${FRM_SOURCE_FILES})
+else()
+     message(STATUC "tpformulae compiling Shared Lib")
+    add_library(tpformulae SHARED ${FRM_SOURCE_FILES})
+endif()
 
 # 1. Add include directory for tpformulae private headers
 # Or using generator expressions

@@ -37,14 +37,16 @@
 //In case we are compiling a DLL we need to export,
 //we import otherwsie
 
-
-#ifdef TPNIKOPOLIS_EXPORTS
-#define TPNIKOPOLIS_IMPEXP		__declspec(dllexport)	
+#ifdef TPSTATIC
+	#define TPNIKOPOLIS_IMPEXP
 #else
-#define TPNIKOPOLIS_IMPEXP		__declspec(dllimport)
-#endif 
+	#ifdef TPNIKOPOLIS_EXPORTS
+	#define TPNIKOPOLIS_IMPEXP		__declspec(dllexport)	
+	#else
+	#define TPNIKOPOLIS_IMPEXP		__declspec(dllimport)
+	#endif 
 
-
+#endif
 
 
 #endif

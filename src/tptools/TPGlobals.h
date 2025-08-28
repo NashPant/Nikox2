@@ -13,7 +13,7 @@
 #ifndef TP_GLOBALS
 #define TP_GLOBALS
 
-#include <TPNikopolisUtils.h>
+#include "TPNikopolisUtils.h"
 #include <string>
 //#include "TPMarket/TemplateStore.h"
 

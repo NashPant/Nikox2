@@ -6,6 +6,11 @@ project(iNkox2
 )
 
 # add import export defiinitions
+# Define TPSTATIC as both a CMake variable and preprocessor macro
+set(TPSTATIC ON CACHE BOOL "Build tptools as a static library")
+if(TPSTATIC)
+    add_definitions(-DTPSTATIC)
+endif()
 add_definitions(-DTPNIKOPOLIS_EXPORTS)
 add_definitions(-D_HAS_TR1_NAMESPACE)
 
@@ -33,7 +38,7 @@ endif()
 
 # Add required packages
 find_package(fmt CONFIG REQUIRED)  
-find_package(boost CONFIG REQUIRED)  
+#find_package(boost CONFIG REQUIRED)  
 
 # # Include project settings
  #include(cmake/StandardProjectSettings.cmake)

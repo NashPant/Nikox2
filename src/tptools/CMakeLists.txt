@@ -12,12 +12,23 @@ file(GLOB_RECURSE TOOLS_SOURCE_FILES
 
 message(STATUS "TOOLS_SOURCE_FILES = ${TOOLS_SOURCE_FILES}")
 #add_library(tptools SHARED ${FRM_SOURCE_FILES} ${TOOLS_CONT_SOURCE_FILES})
-add_library(tptools SHARED ${TOOLS_SOURCE_FILES})
 
+# TPTools/CMakeLists.txt
+# Check if TPSTATIC is defined
+if(DEFINED TPSTATIC OR BUILD_TPTOOLS_STATIC)
+    message(STATUC "TPtools compiling Static Lib")
+    add_library(tptools STATIC ${TOOLS_SOURCE_FILES})
+else()
+     message(STATUC "TPtools compiling Shared Lib")
+    add_library(tptools SHARED ${TOOLS_SOURCE_FILES})
+endif()
+
+target_link_libraries(tptools PRIVATE
+        fmt::fmt)
 # 1. Add include directory for tpformulae private headers
 # Or using generator expressions
 target_include_directories(tptools
-    PRIVATE
+    PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
 )

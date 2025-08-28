@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.26)
 macro(setup)
 	# Language standards
-	set (CMAKE_CXX_STANDARD 20) set(CMAKE_CXX_STANDARD_REQUIRED YES) set(CMAKE_CXX_EXTENSIONS OFF)
+	set (CMAKE_CXX_STANDARD 20) 
+	set(CMAKE_CXX_STANDARD_REQUIRED YES) 
+	#set(CMAKE_CXX_EXTENSIONS OFF)
 	set (CMAKE_C_STANDARD 11)
 	set (CMAKE_C_STANDARD_REQUIRED YES)
 	set(CMAKE_C_EXTENSIONS OFF)
@@ -19,14 +21,15 @@ macro(setup)
 
 	# Warnings to max + turn off signed/unsigned warnings
 	# Warnings are errors by default
-	set (CMAKE_COMPILE_WARNING_AS_ERROR ON)
-	# Windows has excellent stl debugging by default; turn on assertions for stdlibc++ if (NOT WIN32)
-	add_compile_definitions($<$<CONFIG: Debug>:_GLIBCXX_ASSERTIONS>)
+	#set (CMAKE_COMPILE_WARNING_AS_ERROR ON)
+	# Windows has excellent stl debugging by default; turn on assertions for stdlibc++ 
+	if (NOT WIN32)
+		add_compile_definitions($<$<CONFIG: Debug>:_GLIBCXX_ASSERTIONS>)
 	endif()
 	# Standard build tweaks
 	if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") 
 		add_compile_options(/bigobj /Zc:__cplusplus) 
-		add_link_options(/MANIFEST: NO)
+		#add_link_options(/MANIFEST: NO)
 	endif()
 
 	set (CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -43,7 +46,8 @@ macro(setup)
 	# On macOS, you might use @loader_path instead:
 	if (APPLE)
 		set (CMAKE_INSTALL_RPATH "@loader_path")
-		# set (CMAKE_BUILD_WITH_INSTALL_RPATH ON) endif()
+		# set (CMAKE_BUILD_WITH_INSTALL_RPATH ON) 
+	endif()
 endmacro()
 
 function(setup_sanitizer)
