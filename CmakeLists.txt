@@ -8,6 +8,8 @@ project(iNkox2
 # add import export defiinitions
 # Define TPSTATIC as both a CMake variable and preprocessor macro
 set(TPSTATIC ON CACHE BOOL "Build tptools as a static library")
+set(NIKO_PYTHON_ENV "niko13")
+
 if(TPSTATIC)
     add_definitions(-DTPSTATIC)
 endif()
@@ -27,13 +29,18 @@ message(STATUS "C++ Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "MSVC: ${MSVC}")
 message(STATUS "Generator: ${CMAKE_GENERATOR}")
 message(STATUS "Host System: ${CMAKE_HOST_SYSTEM_NAME}")
+message (STATUS "Python Include Directories: ${Python_INCLUDE_DIRS}")
 
 
 if(MSVC)
     message(STATUS "Configuring for MSVC")
+    set (USER_DIR "$ENV{USERPROFILE}")
 	add_compile_options(/std:c++${CMAKE_CXX_STANDARD})
 	#add_compile_options(/Zx:preprocesor})
 	add_compile_options(/utf-8)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4828 /wd4858")
+else()
+    set(USER_DIR "$ENV{HOME}")
 endif()
 
 # Add required packages
@@ -51,9 +58,21 @@ find_package(fmt CONFIG REQUIRED)
 # option(MY_PROJECT_BUILD_EXAMPLES "Build examples" ON)
 # option(MY_PROJECT_BUILD_BENCHMARKS "Build benchmarks" OFF)
 
+#find_package (Python3 COMPONENTS Interpreter Development REQUIRED)
+set (PYTHON_EXECUTABLE "C:/miniconda3/envs/${NIKO_PYTHON_ENV}/python.exe") 
+set(Python3_ROOT_DIR "C:/miniconda3/envs/${NIKO_PYTHON_ENV}") 
+set(Python3_EXECUTABLE "C:/miniconda3/envs/${NIKO_PYTHON_ENV}/python.exe")
+
+message (STATUS "Python3_EXECUTABLE = ${Python3_EXECUTABLE}") 
+message(STATUS "Python3_INCLUDE_DIRS = ${Python3_INCLUDE_DIRS}") 
+message(STATUS "Python3_LIBRARIES = ${Python3_LIBRARIES}") 
+find_package (Python3 COMPONENTS Interpreter Development REQUIRED)
 # # Add subdirectories
 # add_subdirectory(external)
 add_subdirectory(src)
+
+enable_testing()
+add_subdirectory("${CMAKE_SOURCE_DIR}/tests/cpp" "${CMAKE_BINARY_DIR}/tests")
 
 # if(MY_PROJECT_BUILD_TESTS)
     # enable_testing()
@@ -67,3 +86,4 @@ add_subdirectory(src)
 # if(MY_PROJECT_BUILD_BENCHMARKS)
     # add_subdirectory(benchmarks)
 # endif()
+

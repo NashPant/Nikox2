@@ -1,0 +1,59 @@
+﻿
+cmake_minimum_required(VERSION 3.22)
+
+# Set C++ standard
+set (CMAKE_CXX_STANDARD 20)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
+# Toggle to enable/disable GSL
+option (USE_GSL "Enable GSL library inclusion" OFF) # GSL configuration
+ if (USE_GSL)
+	# Option 1: Explicit GSL paths (manually built)
+	set (GSL_ROOT $ENV{GSL_ROOT})
+	set (GSL_INCLUDE_DIR "${GSL_ROOT}")
+	set(GSL_LIBRARY "${GSL_ROOT}/gsl.lib")
+	set(GSL_CBLAS_LIBRARY "${GSL_ROOT}/gslcblas.lib")
+	# Verify GSL paths exist
+	if (NOT EXISTS "${GSL_INCLUDE_DIR}")
+		message (FATAL_ERROR "GSL include directory not found: ${GSL_INCLUDE_DIR}")
+	endif()
+	if (NOT EXISTS "${GSL_LIBRARY}")
+		message (FATAL_ERROR "GSL library not found: ${GSL_LIBRARY}")
+	endif()
+	if (NOT EXISTS "${GSL_CBLAS_LIBRARY}")
+		message (FATAL_ERROR "GSL CBLAS library not found: ${GSL_CBLAS_LIBRARY}") 
+	endif()
+	include_directories(${GSL_INCLUDE_DIR})
+endif()
+
+# Find Google Test package installed via vcpkg 
+find_package(GTest REQUIRED)
+# Enable testing 
+enable_testing()
+# Include Google Test headers
+include (GoogleTest)
+# Add subdirectories containing tests ✓
+add_executable(tptools_test
+	tptools/test_enums.cpp 
+	tptools/test_string_utils.cpp)
+
+target_link_libraries(tptools_test
+GTest::gtest
+GTest::gtest_main
+tptools)
+
+
+message("TEST CMAKE SOURCE DIR: ${CMAKE_SOURCE_DIR}")
+target_include_directories (tptools_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
+# PRIVATE ${GTEST_INCLUDE_DIRS}
+#
+# )
+# PRIVATE ${CMAKE_SOURCE_DIR}/src/cpp/tptools)
+# Optional: Create a custom target to run all tests
+# Discover tests for Visual Studio Test Explorer
+gtest_discover_tests(tptools_test)
+
+add_custom_target (run_all_tests
+COMMAND ${CMAKE_CTEST_COMMAND} --verbose 
+DEPENDS all
+COMMENT "Running all tests"
+)
