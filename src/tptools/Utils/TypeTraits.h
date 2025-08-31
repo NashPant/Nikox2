@@ -5,7 +5,7 @@
 
 // https://devblogs.microsoft.com/cppblog/optimizing-the-layout-of-empty-base-classes-in-vs2015-update-2-3/
 #ifndef EMPTY_BASE_OPTIMIZATION_FIX
-#if defined( _MSC_VER ) && !defined( __clang__ )
+#if _MSC_VER  < 1900
 #define EMPTY_BASE_OPTIMIZATION_FIX __declspec( empty_bases )
 #else
 #define EMPTY_BASE_OPTIMIZATION_FIX

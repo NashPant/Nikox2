@@ -15,6 +15,8 @@ if(TPSTATIC)
 endif()
 add_definitions(-DTPNIKOPOLIS_EXPORTS)
 add_definitions(-D_HAS_TR1_NAMESPACE)
+add_definitions(-DTPSTATIC)
+
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 20)
@@ -44,6 +46,8 @@ else()
 endif()
 
 # Add required packages
+#find_package(Boost REQUIRED COMPONENTS core system)
+find_package(Eigen3 CONFIG REQUIRED)  
 find_package(fmt CONFIG REQUIRED)  
 #find_package(boost CONFIG REQUIRED)  
 

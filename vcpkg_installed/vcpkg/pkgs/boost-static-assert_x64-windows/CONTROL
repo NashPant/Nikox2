@@ -1,0 +1,7 @@
+Package: boost-static-assert
+Version: 1.88.0
+Depends: boost-cmake, boost-config, boost-headers
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 7690e5511dc8ac6b813a367255642f286d2c014636d3872322bbe3cb3ce2cbd5
+Description: Boost static_assert module
