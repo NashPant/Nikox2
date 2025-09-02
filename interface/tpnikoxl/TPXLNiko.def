@@ -1,0 +1,14 @@
+LIBRARY TPXNiko.xll
+
+EXPORTS
+    xlAutoOpen
+    xlAutoClose
+    xlAutoFree
+
+
+;===================================================================
+; API LOAD FUNCTIONS
+;===================================================================
+	TPXLModulePath
+	TPXLModuleName
+	TPDXLisplayTest

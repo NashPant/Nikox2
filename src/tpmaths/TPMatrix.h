@@ -13,274 +13,475 @@
 #define TP_MATRIX_H
 
 //#include "TPToolsUtils.h"
-#include <Eigen/Dense>
 #include "../TpTools/TPMathException.h"
 #include <vector>
 #include <memory>
-
 
 
 template <class T>
 class TPMatrix
 {
 public:
-    // Constructors
+    // typedef
+    typedef typename T* iterator;
+    typedef const typename  T* const_iterator;
+    // Constructors.
     TPMatrix();
     TPMatrix(size_t n0, size_t n1, T val = T());
-    ~TPMatrix() = default;
+    ~TPMatrix()
+    {
+        for (size_t i = 0; i < size(0); ++i)
+        {
+            if (!(myData[i].empty()))
+                myData[i].clear();
+        }
+
+        if (!(myData.empty()))
+            myData.clear();
+    }
+
     /*
-    *  @brief Initialize with row - major C - contiguous array as it comes from Python
+      @brief. Initialise with row C-contiguous array as it comes from python
     */
-   
-     static TPMatrix<T> create(const T * rawarray, size_t rows, size_t columns);
-    // Copy, assignment, and clone
-    TPMatrix(const TPMatrix<T>& rhs) = default;
-    TPMatrix<T>& operator= (const TPMatrix<T>& rhs) = default;
+    static TPMatrix<T> create(const T* rawarray, size_t rows, size_t columns);
+
+
+    // Copy, assignment and clone.
+    TPMatrix(const TPMatrix<T>& rhs);
+    TPMatrix<T>& operator=(const TPMatrix<T>& rhs);
     TPMatrix<T>& operator+=(const TPMatrix<T>& rhs);
-    TPMatrix<T>& operator != (const T& c);
-    TPMatrix<T>* clone() const;
-    // Functions
-    bool empty() const;
-    void clear();
-    void resize(size_t no, size_t n1, T val = T());
-    size_t size(size_t dir) const;
-    void setAllElements(const T& t);
-    void zeroALLElements();
+    TPMatrix<T>& operator/= (const T& c);
+    TPMatrix<T>* clone(void) const;
+
+    // Functions.
+    bool    empty(void) const;
+    void    clear(void);
+    void    resize(size_t n0, size_t n1, T val = T());
+    size_t  size(size_t dir) const;
+    void    setAllElements(const T& t);
+    void    zeroAllElements(void);
+
+    void push_back(const std::vector<T>& slice, size_t dir);
+
+    //
     bool hasZeroElements() const;
-    bool subMatrixhasZeroElements(size_t r1, size_t c1, size_t r2, size_t c2);
-    // Accessors
-    const Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>& data() const;
-    const T& at(size_t pose, size_t pos1) const;
-    T& at(size_t pose, size_t pos1);
-    T& operator() (size_t i, size_t j) { return at(i, j); }
+    // will check for zero element in submatrix Matrix(i1:i2, r1:r2) inclusive
+    bool subMatrixhasZeroElements(const size_t& r1, const size_t& c1, const size_t& r2, const size_t& c2);
+
+    // Accessors.
+    const std::vector<std::vector<T> >& data(void) const;
+    const T& at(size_t pos0, size_t pos1) const;
+    T& at(size_t pos0, size_t pos1);
+    T& operator()(size_t i, size_t j) { return at(i, j); }
+
     // Simple transpose
     TPMatrix<T> transpose() const;
 
-    // Pointer access
-    T* pointerdata() { return myData.data(); }
-    const T* pointerdata() const { return myData.data(); }
+    //! \name Iterator access
+    //@{
+    const_iterator begin() const;
+    iterator begin();
+    const_iterator end() const;
+    iterator end();
 
-    // Operators
-    const Eigen::Matrix<T, 1, Eigen::Dynamic, Eigen::RowMajor> operator[] (size_t pos) const;
-    Eigen::Matrix<T, 1, Eigen::Dynamic, Eigen::RowMajor> operator[](size_t pos);
+    //
+  //  T*	 pointerdata(void)	{ return (*myData.begin()).begin(); }
+    //T*	 pointerdata(void) { return &myData[0][0]; }
+    T* pointerdata(void) { return myData.data()->data(); }
+    /// Double pointer to the array
+    //const T*	 pointerdata(void)	const {return (*myData.begin()).begin();}
+    const T* pointerdata(void)	const { return myData.data()->data(); }
+    // Operators.
+    /// This will basically will return pos-row
+    const std::vector<T>& operator[](size_t pos) const { return myData[pos]; }
+    std::vector<T>& operator[](size_t pos) { return myData[pos]; }
 
-    // Column access
+    /// Access Columns
+    /// It will return pos-column
     std::vector<T> column(size_t pos) const;
-    // Size queries
-    size_t RowNo() const { return myData.rows(); }
-    size_t ColNo() const { return myData.cols(); }
-    size_t rows() const { return myData.rows(); }
-    size_t columns() const { return myData.cols(); } size_t size1() const { return rows(); }
+    //	std::vector<T>& column(siz_t pos);
+
+    size_t RowNo() const { return myData.size(); }
+    size_t ColNo() const { return (RowNo() == 0) ? 0 : (*myData.begin()).size(); }
+
+    // to match some quantlib functions
+    size_t rows() const { return  myData.size(); }
+    size_t columns() const { return (RowNo() == 0) ? 0 : (*myData.begin()).size(); }
+    size_t size1() const { return rows(); }
     size_t size2() const { return columns(); }
-    // Push back (row or column)
-    void push_back(const std::vector<T>& slice, size_t dir);
+
 private:
-    // Data
-    Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> myData;
+    // Data.
+    std::vector<std::vector<T> >   myData;
+
+    // Housekeeping.
+    void copyFrom(const TPMatrix<T>& rhs);
 };
 
-// Implementation
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+
 template <class T>
 inline
 TPMatrix<T>
 TPMatrix<T>::create(const T* rawarray, size_t rows, size_t cols)
 {
-    TPMatrix<T> m;
-    m.myData.resize(rows, cols);
-    std::copy(rawarray, rawarray + rows * cols, m.myData.data());
+    TPMatrix m;
+    // we traverse rows and for each row we got to the appropriate element
+    for (auto i = 0; i < rows; ++i)
+    {
+        std::vector<T> row; row.assign(rawarray + i * cols, rawarray + i * cols + cols);
+        m.myData.emplace_back(row);
+    }
+
     return m;
 }
 
 template <class T>
 inline
-TPMatrix<T>::TPMatrix() : myData(0, 0)
+TPMatrix<T>::TPMatrix()
 {
 }
 
+///////////////////////////////////////////////////////////////////////////////
 template <class T>
 inline
-TPMatrix<T>::TPMatrix(size_t no, size_t n1, T val)
-    : myData(no, n1)
+TPMatrix<T>::TPMatrix(size_t n0, size_t n1, T val)
 {
-    myData.fill(val);
+    resize(n0, n1, val);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+template <class T>
+inline
+TPMatrix<T>::TPMatrix(const TPMatrix<T>& rhs)
+{
+    copyFrom(rhs);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+template <class T>
+inline
+TPMatrix<T>& TPMatrix<T>::operator=(const TPMatrix<T>& rhs)
+{
+    if (this != &rhs)
+    {
+        copyFrom(rhs);
+    }
+    return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 template <class T>
 inline
 TPMatrix<T>& TPMatrix<T>::operator+=(const TPMatrix<T>& rhs)
 {
-    if (rows() != rhs.rows() || columns() != rhs.columns())
-    {
-        THROW("TPMatrix: Matrix dimensions must match for += operation.");
-    }
-    myData += rhs.myData;
+    //TP_ASSERT( size(0) == rhs.size(0) && size(1) == rhs.size(1) );
+    unsigned long i, j, m = size(0), n = size(1);
+    for (i = 0; i < m; ++i)
+        for (j = 0; j < n; ++j)
+            myData[i][j] += rhs.myData[i][j];
     return *this;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 template <class T>
 inline
-TPMatrix<T>* TPMatrix<T>::clone() const
+TPMatrix<T>* TPMatrix<T>::clone(void) const
 {
     return new TPMatrix<T>(*this);
 }
 
-template<class T>
-inline
-bool TPMatrix<T>::empty() const
-{
-    return myData.rows() == 0 || myData.cols() == 0;
+template <class T>
+inline typename TPMatrix<T>::const_iterator TPMatrix<T>::begin() const {
+    return this->pointerdata();
 }
 
 template <class T>
-inline
-void TPMatrix<T>::clear()
-{
-    myData.resize(0, 0);
+inline typename TPMatrix<T>::iterator TPMatrix<T>::begin() {
+    return this->pointerdata();
 }
 
 template <class T>
-inline
-void TPMatrix<T>::resize(size_t no, size_t n1, T val)
-{
-    myData.resize(no, n1);
-    myData.fill(val);
+inline typename TPMatrix<T>::const_iterator TPMatrix<T>::end() const {
+    return this->pointerdata() + this->RowNo() * this->ColNo();
 }
 
-template<class T>
+template <class T>
+inline typename TPMatrix<T>::iterator TPMatrix<T>::end() {
+    return this->pointerdata() + this->RowNo() * this->ColNo();
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <class T>
 inline
+void TPMatrix<T>::copyFrom(const TPMatrix<T>& rhs)
+{
+    myData = rhs.myData;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+template <class T>
+inline
+bool TPMatrix<T>::empty(void) const
+{
+    bool rtn = myData.empty();
+
+    if (!rtn)
+    {
+        rtn &= myData[0].empty();
+    }
+
+    return rtn;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+template <class T>
+inline
+void TPMatrix<T>::clear(void)
+{
+    myData.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+template <class T>
+inline
+void TPMatrix<T>::resize(size_t n0, size_t n1, T val)
+{
+    myData.resize(n0);
+
+    for (size_t i = 0; i < size(0); ++i)
+    {
+        myData[i].resize(n1, val);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+template <class T>
 size_t TPMatrix<T>::size(size_t dir) const
 {
-    if (dir == 0) {
-        return myData.rows();
-    }
-    else if (dir == 1) {
-        return myData.cols();
-    }
-    THROW("TPMatrix: Invalid dimension index.");
-    return 0;
-}
-template <class T>
-inline
-void TPMatrix<T>::push_back(const std::vector<T>& slice, size_t dir)
-{
+    //TP_ASSERT( dir == 0 || dir == 1 );
 
-    if (dir == 0) { // Add row
-        if (empty()) {
-            resize(1, slice.size());
-        }
-        else if (slice.size() == columns()) {
-            myData.conservativeResize(myData.rows() + 1, myData.cols());
-        }
-        else {
-            THROW("TPMatrix: The slice and matrix sizes must match.");
-        }
+    size_t rtn = 0;
 
-        myData.row(myData.rows() - 1) = Eigen::Map<const Eigen::Matrix<T, 1, Eigen::Dynamic>>(slice.data(), 1, slice.size());
-    }
-    else if (dir == 1) { // Add column
-        if (empty()) {
-            resize(slice.size(), 1);
-        }
-        else if (slice.size() == rows()) {
-            myData.conservativeResize(myData.rows(), myData.cols() + 1);
+    if (!empty())
+    {
+        if (dir == 0)
+        {
+            rtn = myData.size();
         }
         else
         {
-            THROW("TPMatrix: The slice and matrix sizes must match.");
+            rtn = myData[0].size();
         }
-        myData.col(myData.cols() - 1) = Eigen::Map<const Eigen::Matrix<T, Eigen::Dynamic, 1>>(slice.data(), slice.size(), 1);
     }
-    else {
-        THROW("TPMatrix: Invalid direction for push_back.");
+
+    return rtn;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+template <class T>
+void TPMatrix<T>::push_back(const std::vector<T>& slice, size_t dir)
+{
+    //TP_ASSERT( dir == 0 || dir == 1 );
+
+    if (dir == 0)
+    {
+        // A 0-slice.
+        // - tensor-1 and slice must match.
+        if (empty())
+        {
+            resize(1, slice.size());
+        }
+        else if ((slice.size() == size(1)))
+        {
+            resize(size(0) + 1, size(1));
+        }
+        else
+        {
+            THROW("TPMatrix: The slice and tensor sizes must match.");
+        }
+
+        for (size_t i = 0; i < size(1); ++i)
+        {
+            myData[size(0) - 1][i] = slice[i];
+        }
+    }
+    else
+    {
+        // A 1-slice.
+        // - tensor-0 and slice must match.
+        if (empty())
+        {
+            resize(slice.size(), 1);
+        }
+        else if (slice.size() == size(0))
+        {
+            resize(size(0), size(1) + 1);
+        }
+        else
+        {
+            THROW("TPMatrix: The slice and tensor sizes must match.");
+        }
+
+        for (size_t i = 0; i < size(0); ++i)
+        {
+            myData[i][size(1) - 1] = slice[i];
+        }
     }
 }
-     
-        
+
+///////////////////////////////////////////////////////////////////////////////
 template <class T>
 inline
-    const Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>& TPMatrix<T>::data() const
+const std::vector<std::vector<T> >& TPMatrix<T>::data(void) const
 {
     return myData;
 }
 
-template<class T>
+///////////////////////////////////////////////////////////////////////////////
+template <class T>
 inline
-    const T& TPMatrix<T>::at(size_t pose, size_t pos1) const
+const T& TPMatrix<T>::at(size_t pos0, size_t pos1) const
 {
-    return myData(pose, pos1);
+    return myData[pos0][pos1];
 }
 
-template<class T>
-inline T& TPMatrix<T>::at(size_t pose, size_t pos1)
-{
-    return myData(pose, pos1);
-}
-template<class T>
+///////////////////////////////////////////////////////////////////////////////
+template <class T>
 inline
-    void TPMatrix<T>::setAllElements(const T& t)
+T& TPMatrix<T>::at(size_t pos0, size_t pos1)
 {
-    myData.fill(t);
+    return myData[pos0][pos1];
 }
 
-template<class T>
+///////////////////////////////////////////////////////////////////////////////
+template <class T>
 inline
-    void TPMatrix<T>::zeroALLElements()
+void TPMatrix<T>::setAllElements(const T& t)
 {
-    myData.setZero();
+    unsigned long i, j, m = size(0), n = size(1);
+    for (i = 0; i < m; ++i)
+        for (j = 0; j < n; ++j)
+            myData[i][j] = t;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+template <class T>
+inline
+void TPMatrix<T>::zeroAllElements(void)
+{
+    unsigned long i, j, m = size(0), n = size(1);
+    for (i = 0; i < m; ++i)
+        for (j = 0; j < n; ++j)
+            myData[i][j] = 0;
+}
+
+///////
+//  Check if the matrix has Zero Elements.
+////////////////////////////////////
+template <class T>
+inline
+bool  TPMatrix<T>::hasZeroElements() const
+{
+    unsigned long i, j, m = size(0), n = size(1);
+    bool haszero = false;
+    for (i = 0; i < m; ++i)
+        for (j = 0; j < n; ++j)
+            if (myData[i][j] == 0) return true;
+
+    return haszero;
+}
+
+///////
+//  Same thing but for a sub-matrix as well.
+////////////////////////////////////
+
+template <class T>
+inline
+bool  TPMatrix<T>::subMatrixhasZeroElements(const size_t& r1, const size_t& c1, const size_t& r2, const size_t& c2)
+{
+    unsigned long i, j, m = size(0), n = size(1);
+    //
+    //
+    TP_MATH_REQUIRE(r1 >= 0, "subMatrixhasZeroElements::Lower Index outside bounds", 9, false);
+    TP_MATH_REQUIRE(r2 < m, "subMatrixhasZeroElements::Upper Index outside bounds", 9, false);
+    TP_MATH_REQUIRE(c1 >= 0, "subMatrixhasZeroElements::Lower Index outside bounds", 9, false);
+    TP_MATH_REQUIRE(c2 < n, "subMatrixhasZeroElements::Upper Index outside bounds", 9, false);
+    //
+    //
+    //if(r1 < 0) r1=0;
+    //if(r2 >= m) r2 = m-1;
+    //if(c1 < 0) c1=0;
+    //if(c2 >= n) c2 =n-1 ;
+
+    bool haszero = false;
+    for (i = r1; i <= r2; ++i)
+        for (j = c1; j <= c2; ++j)
+            if (myData[i][j] == 0) return true;
+
+    return haszero;
 }
 
 template <class T>
 inline
-    bool TPMatrix<T>::hasZeroElements() const
+std::vector<T> TPMatrix<T>::column(size_t pos) const
 {
-    return (myData.array()== 0).any();
-}
+    // 
+    std::vector<T>	res;
+    typename std::vector< std::vector<T> >::const_iterator it = myData.begin();
+    for (; it != myData.end(); it++)
+        res.push_back((*it)[pos]);
 
-template <class T>
-inline   bool TPMatrix<T>::subMatrixhasZeroElements(size_t r1, size_t c1, size_t r2, size_t c2)
-{
-    TP_MATH_REQUIRE(r1 > 0, "subMatrixhasZeroElements:: Lower row index outside bounds", 9, false);
-    TP_MATH_REQUIRE(r2 < rows(), "subMatrixhasZeroElements :: Upper row index outside bounds", 9, false);
-    TP_MATH_REQUIRE(c1 > 0, "subMatrixhasZeroElements:: Lower column index outside bounds", 9, false);
-    TP_MATH_REQUIRE(c2 < columns(), "subMatrixhasZeroElements:: Upper column index outside bounds", 9, false);
-    return (myData.block(r1, c1, r2 - r1 + 1, c2 - c1 + 1).array() = 0).any();
-}
-
-template <class T>
-inline  std::vector<T> TPMatrix<T>::column(size_t pos) const
-{
-    std::vector<T> res;
-    res.reserve(myData.rows());
-    for (size_t i = 0; i < myData.rows(); ++i) {
-        res.push_back(myData(i, pos));
-    }
     return res;
 }
 
 template <class T>
-inline         TPMatrix<T>& TPMatrix<T>::operator!=(const T& c)
+inline
+TPMatrix<T>& TPMatrix<T>::operator /= (const T& c)
 {
-    myData != c;
+    unsigned long i, j, m = size(0), n = size(1);
+    for (i = 0; i < m; ++i)
+        for (j = 0; j < n; ++j)
+            myData[i][j] /= c;
     return *this;
 }
+
+
+// Internal tranpose
 template <class T>
-inline TPMatrix<T> TPMatrix<T>::transpose() const
+TPMatrix<T> TPMatrix<T>::transpose() const
 {
-    TPMatrix<T> temp;
-    temp.myData = myData.transpose();
+    TPMatrix<T> temp(this->ColNo(), this->RowNo());
+
+    for (size_t i = 0; i < this->RowNo(); i++)
+        for (size_t j = 0; j < this->ColNo(); j++)
+        {
+            T x = this->at(i, j);
+            temp[j][i] = x;
+        }
     return temp;
 }
-template <class T>
-inline       const Eigen::Matrix<T, 1, Eigen::Dynamic, Eigen::RowMajor> TPMatrix<T>::operator[](size_t pos) const
-{
-    return myData.row(pos);
-}
-template <class T>
-inline       Eigen::Matrix<T, 1, Eigen::Dynamic, Eigen::RowMajor> TPMatrix<T>::operator[](size_t pos)
-{
 
-    return myData.row(pos);
+/*
+// unary transpose operator
+template <class T>
+inline TPMatrix<T>
+operator ^(const TPMatrix<T>& m)
+{
+    TPMatrix<T> temp(m.ColNo(), m.RowNo());
+
+    for (size_t i = 0; i < m.RowNo(); i++)
+        for (size_t j = 0; j < m.ColNo(); j++)
+        {
+            T x = m[i][j];
+            temp[j][i] = x;
+        }
+    return temp;
 }
-       
+*/
 
 #endif 

@@ -6,7 +6,7 @@ file(GLOB_RECURSE MATHS_SOURCE_FILES
 
  add_library(tpmaths STATIC ${MATHS_SOURCE_FILES})
 
- target_link_libraries(tpmaths PRIVATE 
+ target_link_libraries(tpmaths PUBLIC 
  Eigen3::Eigen
  tptools
  fmt::fmt)

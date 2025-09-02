@@ -18,6 +18,21 @@ add_definitions(-D_HAS_TR1_NAMESPACE)
 add_definitions(-DTPSTATIC)
 
 
+
+# Set output directories for all targets
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_SYSTEM_PROCESSOR}/${CMAKE_BUILD_TYPE}") 
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+
+# Optional: Ensure the settings apply for all configurations (Debug, Release, etc.)
+foreach (CONFIG ${CMAKE_CONFIGURATION_TYPES})
+    string (TOUPPER ${CONFIG} CONFIG_UPPER)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONFIG_UPPER} "${CMAKE_BINARY_DIR}/${CMAKE_SYSTEM_PROCESSOR}/${CONFIG}") 
+    set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONFIG_UPPER} "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONFIG_UPPER}}") 
+    set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_UPPER} "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONFIG_UPPER}}") 
+endforeach()
+
+
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -74,6 +89,7 @@ find_package (Python3 COMPONENTS Interpreter Development REQUIRED)
 # # Add subdirectories
 # add_subdirectory(external)
 add_subdirectory(src)
+add_subdirectory(interface)
 
 enable_testing()
 add_subdirectory("${CMAKE_SOURCE_DIR}/tests/cpp" "${CMAKE_BINARY_DIR}/tests")
