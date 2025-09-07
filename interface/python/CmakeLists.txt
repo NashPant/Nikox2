@@ -1,0 +1,95 @@
+cmake_minimum_required(VERSION 3.20)
+project(pyNiko LANGUAGES CXX)
+
+# Ensure we build a shared library with .pyd extension
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+# Python setup
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+
+if (TARGET pybind11::headers)
+    message(STATUS "Using vendored pybind11")
+else()
+    find_package(pybind11 CONFIG REQUIRED)
+endif()
+# find_package(pybind11 CONFIG  REQUIRED)
+
+# Sources
+set(PYSOURCES
+    pyNiko.cpp
+)
+
+
+# Tell CMake/Pybind11 to use them
+# find_package(pybind11 REQUIRED)
+
+#add_library(pyNiko MODULE ${PYSOURCES})
+pybind11_add_module(pyNiko
+   # niko/curves/curve_utils.cpp
+   # niko/index/index_tools.cpp
+   # niko/products/product_tools.cpp
+   # niko/tools/DataFrameTools.cpp
+   # niko/tools/dts_cals.cpp
+   # niko/tools/time_series_tools.cpp
+    pyNiko.cpp
+)
+
+# Ensure .pyd extension instead of .dll
+set_target_properties(pyNiko PROPERTIES
+    PREFIX ""
+    SUFFIX ".pyd"
+)
+
+
+# REmember the values of the environment variables PYTHON_INCLUDE and PYTHON_LIB_INCLUDE must be set
+# I usually set them in  a script that launches visual studio 
+# So depending on the python environment you want to use you set them accordingly
+# so for python 3.11 i set up a batch file that point to my conda env with python 3.11 and same for the link libs
+if(DEFINED ENV{PYTHON_INCLUDE})
+    set(PYTHON_INCLUDE $ENV{PYTHON_INCLUDE})
+    message(STATUS "PYTHON_INCLUDE: ${PYTHON_INCLUDE}")
+else()
+    message(FATAL_ERROR "Environment variable PYTHON_INCLUDE is not set")
+endif()
+
+target_include_directories(pyNiko PRIVATE
+    ${PYTHON_INCLUDE}
+)
+
+
+# Preprocessor definitions
+target_compile_definitions(pyNiko PRIVATE
+    _WINDLL
+    _SCL_SECURE_NO_DEPRECATE
+    _CRT_SECURE_NO_DEPRECATE
+    _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING
+    _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
+    _HAS_TR1_NAMESPACE
+)
+
+# Language standard
+target_compile_features(pyNiko PRIVATE cxx_std_20)
+
+# Windows specific compile options
+if (MSVC)
+    target_compile_options(pyNiko PRIVATE /bigobj /W3)
+endif()
+
+target_link_libraries(pyNiko PRIVATE
+    Python3::Python
+)
+
+if(DEFINED ENV{PYTHON_LIB_INCLUDE})
+    set(PYTHON_LIB_INCLUDE $ENV{PYTHON_LIB_INCLUDE})
+    message(STATUS "PYTHON_LIB_INCLUDE: ${PYTHON_LIB_INCLUDE}")
+else()
+    message(FATAL_ERROR "Environment variable PYTHON_LIB_INCLUDE is not set")
+endif()
+
+# Link dependencies
+target_link_directories(pyNiko PRIVATE
+    ${PYTHON_LIB_INCLUDE}
+    #${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/fmt6/libs/$<IF:$<CONFIG:Debug>,Debug,Release>/$<IF:$<PLATFORM_ID:Windows>,x64,Win32>
+)
+
+#target_link_libraries(pyNiko PRIVATE QuantLib NikoInterface)

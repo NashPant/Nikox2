@@ -78,14 +78,16 @@ find_package(fmt CONFIG REQUIRED)
 # option(MY_PROJECT_BUILD_BENCHMARKS "Build benchmarks" OFF)
 
 #find_package (Python3 COMPONENTS Interpreter Development REQUIRED)
-set (PYTHON_EXECUTABLE "C:/miniconda3/envs/${NIKO_PYTHON_ENV}/python.exe") 
-set(Python3_ROOT_DIR "C:/miniconda3/envs/${NIKO_PYTHON_ENV}") 
-set(Python3_EXECUTABLE "C:/miniconda3/envs/${NIKO_PYTHON_ENV}/python.exe")
+#set (PYTHON_EXECUTABLE "C:/miniconda3/envs/${NIKO_PYTHON_ENV}/python.exe") 
+#set(Python3_ROOT_DIR "C:/miniconda3/envs/${NIKO_PYTHON_ENV}") 
+#set(Python3_EXECUTABLE "C:/miniconda3/envs/${NIKO_PYTHON_ENV}/python.exe")
 
-message (STATUS "Python3_EXECUTABLE = ${Python3_EXECUTABLE}") 
-message(STATUS "Python3_INCLUDE_DIRS = ${Python3_INCLUDE_DIRS}") 
-message(STATUS "Python3_LIBRARIES = ${Python3_LIBRARIES}") 
-find_package (Python3 COMPONENTS Interpreter Development REQUIRED)
+#message (STATUS "Python3_EXECUTABLE = ${Python3_EXECUTABLE}") 
+#message(STATUS "Python3_INCLUDE_DIRS = ${Python3_INCLUDE_DIRS}") 
+#message(STATUS "Python3_LIBRARIES = ${Python3_LIBRARIES}") 
+#find_package (Python3 COMPONENTS Interpreter Development REQUIRED)
+
+add_subdirectory(external/pybind11)
 # # Add subdirectories
 # add_subdirectory(external)
 add_subdirectory(src)

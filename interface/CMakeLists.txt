@@ -3,3 +3,6 @@ cmake_minimum_required(VERSION 3.6)
 #add_subdirectory(common)
 add_subdirectory(excel)
 add_subdirectory(tpnikoxl)
+
+
+add_subdirectory(python)
