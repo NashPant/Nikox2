@@ -1,8 +1,12 @@
 
+#find_package(Armadillo CONFIG REQUIRED)
+
 file(GLOB_RECURSE MATHS_SOURCE_FILES
 "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
+"${CMAKE_CURRENT_SOURCE_DIR}/*.c"
  "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
  "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+
 
  add_library(tpmaths STATIC ${MATHS_SOURCE_FILES})
 

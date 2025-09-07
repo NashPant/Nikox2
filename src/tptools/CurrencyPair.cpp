@@ -146,7 +146,7 @@ namespace TP::formatting
 		static const Formatter<Currency> ccyFmt;
 		auto ll = ccyFmt.tryParse(left);
 		auto rr = ccyFmt.tryParse(right);
-		if(ll.has_value() && rr.has_value())
+		if(ll.hasValue() && rr.hasValue())
 			return CurrencyPair(ll.value(), rr.value());
 		else
 			return std::nullopt;

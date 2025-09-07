@@ -53,7 +53,7 @@ namespace TP
 	 * @brief parsing functionality
 	 */
 	template<typename T, typename StrT>
-	std::optional<T> tryParse(const StrT& str, const Formatter<T>& formatter)
+	std::optional<T> tryParse(const StrT& str, const Formatter<T>& formatter)  
 	{
 		return formatter.tryParse(str);
 	}
@@ -68,21 +68,21 @@ namespace TP
 	template<typename T, typename StrT>
 	T parse(const StrT& str, const Formatter<T>& formatter)
 	{
-		auto res = formatter.tryParse(str);
+	/*	auto res = formatter.tryParse(str);
 		if(res.has_value())
 			return res.value();
 		
 		std::string msg = formatter.failToParse(str);
-		throw std::invalid_argument(msg);
-		//return T();
-		//return formatter
-		//	.tryParse(str)
-		//	.orElse([str, &formatter]()
-		//{
-		//	std::string msg = formatter.failToParse(str);
-		//	throw std::invalid_argument(msg);
-		//})
-		//	.value();
+		throw std::invalid_argument(msg);*/
+
+		return formatter
+			.tryParse(str)
+			.orElse([str, &formatter]()
+		{
+			std::string msg = formatter.failToParse(str);
+			throw std::invalid_argument(msg);
+		})
+			.value();
 	}
 
 	template<typename T, typename StrT, typename... Types, typename = std::enable_if_t<std::is_constructible_v<Formatter<T>, Types...>>>
@@ -124,7 +124,7 @@ struct TP_formatter
 	: formatter<std::string>
 {
 	template <typename FormatContext>
-	auto format(const T& value, FormatContext &ctx)
+	auto format(const T& value, FormatContext &ctx) const -> decltype(ctx.out())
 	{
 		static const TP::Formatter<T> TPFormatter;
 		return fmt::formatter<std::string>::format(TPFormatter.str(value), ctx);

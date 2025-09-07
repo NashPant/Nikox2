@@ -50,9 +50,19 @@ GTest::gtest_main
 Eigen3::Eigen
 tpmaths)
 
+add_executable(tpdatetime_test
+tpdatetime/test_durations.cpp
+tpdatetime/test_date.cpp)
+
+target_link_libraries(tpdatetime_test
+GTest::gtest
+GTest::gtest_main
+tpdatetime)
+
 message("TEST CMAKE SOURCE DIR: ${CMAKE_SOURCE_DIR}")
 target_include_directories (tptools_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
 target_include_directories (tpmaths_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
+target_include_directories (tpdatetime_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
 # PRIVATE ${GTEST_INCLUDE_DIRS}
 #
 # )
@@ -61,6 +71,7 @@ target_include_directories (tpmaths_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
 # Discover tests for Visual Studio Test Explorer
 gtest_discover_tests(tptools_test)
 gtest_discover_tests(tpmaths_test)
+gtest_discover_tests(tpdatetime_test)
 
 add_custom_target (run_all_tests
 COMMAND ${CMAKE_CTEST_COMMAND} --verbose 

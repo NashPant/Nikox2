@@ -1,9 +1,10 @@
 #pragma once
 #pragma once
 
-#include <optional>
+#include "TPTools/Utils/TPOptional.h"
+//#include <include/date/date.h>
 #include <chrono>
-
+#include <chrono>
 
 namespace TP::date_time
 {
@@ -29,11 +30,11 @@ namespace TP::date_time
 		static time_point now() noexcept;
 
 		// ReSharper disable CppInconsistentNaming
-		static std::optional<std::chrono::sys_days> try_to_sys(const ExcelDate& tp) noexcept;
+		static TP::Optional<std::chrono::sys_days> try_to_sys(const ExcelDate& tp) noexcept;
 
 		static std::chrono::sys_days to_sys(const ExcelDate& tp);
 
-		static std::optional<ExcelDate> try_from_sys(const std::chrono::sys_days& tp) noexcept;
+		static TP::Optional<ExcelDate> try_from_sys(const std::chrono::sys_days& tp) noexcept;
 
 		static ExcelDate from_sys(const std::chrono::sys_days& tp);
 		// ReSharper restore CppInconsistentNaming
@@ -43,4 +44,3 @@ namespace TP::date_time
 		static ExcelDate(max)();
 	};
 }
-

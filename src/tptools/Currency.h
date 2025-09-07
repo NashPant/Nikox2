@@ -3,7 +3,7 @@
 //#include "TPTools/Utils/Operators.h"
 #include "TPNikopolisUtils.h"
 #include "TPTools/Utils/Formatting.h"
-#include <optional>
+#include "TPTools/Utils/TPOptional.h"
 #include <string>
 //#include <cereal/cereal.hpp>
 //#include  <cereal/types/string.hpp>
@@ -16,7 +16,7 @@
 namespace TP
 {
 	struct Currency;
-	using OptCurrency = std::optional<Currency>;
+	using OptCurrency = TP::Optional<Currency>;
 
 	struct  CurrencyData final
 	{

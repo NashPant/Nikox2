@@ -34,151 +34,150 @@ namespace TP::date_time
 		constexpr auto operator "" _Y(unsigned long long y) noexcept { return Years{ y }; }
 	}
 
-	/**
-	 * \brief Represents a duration expressed in human chronological terms: days, weeks, months, years.
-	 */
-	class Duration final
-		: TP::operators::addible<Duration>,
+
+
+	class TPNIKOPOLIS_IMPEXP Duration final
+	 :TP::operators::equality_comparable<Duration>,
+		TP::operators::equality_comparable<Duration, Years>,
+		TP::operators::equality_comparable<Duration, Months>,
+		TP::operators::equality_comparable<Duration, Weeks>,
+		TP::operators::equality_comparable<Duration, Days>,
+		TP::operators::addible<Duration>,
 		TP::operators::subtractible<Duration>,
 		TP::operators::multiplicable<Duration, int>
 	{
 	public:
-		using rep = std::chrono::days::rep;
-		using period = std::chrono::days::period;
-		using duration = std::chrono::duration<rep, period>;
+		constexpr Duration() noexcept : Duration(0_M, 0_D) {}; // null duration 
+		explicit Duration(const std::string& str);
+		constexpr Duration(const Years& y) noexcept : months_(y) {}
+		constexpr Duration(const Months& m)  noexcept : months_(m) {}
+		constexpr Duration(const Weeks& w)   noexcept : days_(w) {}
+		constexpr Duration(const Days& d)  noexcept : days_(d) {}
 
-		explicit operator std::chrono::days() const {
-			return days_;
-		}
-		/**
-		 * \brief Cast duration to months only it will concatenate years and months, will throw if there is day component in this duration
-		 */
-		explicit operator Months() const;
 
-		explicit Duration(rep days = 0) : days_(days) { to_ymd_(); }
-		explicit Duration(std::chrono::days days) : days_(days) { to_ymd_(); }
-		//explicit Duration(const std::string& str);
-		// Conversion constructors
-		explicit Duration(std::chrono::years years) : days_(std::chrono::duration_cast<std::chrono::days>(years)) { to_ymd_(); }
-		explicit Duration(std::chrono::months months) : days_(std::chrono::duration_cast<std::chrono::days>(months)) { to_ymd_(); }
-		explicit Duration(std::chrono::weeks weeks) : days_(std::chrono::duration_cast<std::chrono::days>(weeks)) { to_ymd_(); }
+		template<typename T, std::enable_if_t<std::disjunction_v<
+			std::is_same<T, Years>,
+			std::is_same<T, Months>,
+			std::is_same<T, Weeks>,
+			std::is_same<T, Days>
+			>, int> = 0>
+		[[nodiscard]] constexpr bool is() const
+		{
+			if constexpr (std::is_same_v<T, Days>)				return months_== 0_M;
+			else if constexpr (std::is_same_v<T, Weeks>)     return months_ == 0_M && days() == 0_D;
+			else if constexpr (std::is_same_v<T, Months>)		return days_ == 0_D;
+			else 												return days_ == 0_D && months() == 0_M;
 
-		// Accessor
-		[[nodiscard]] std::chrono::days Days() const { return days_; }
-		[[nodiscard]] constexpr Years Years() const;
-		[[nodiscard]] constexpr Months Months() const;
 
-		// Spaceship operator for Duration vs Duration
-		[[nodiscard]] auto operator<=>(const Duration& other) const = default;
-
-		// Spaceship operators for other types
-		[[nodiscard]] auto operator<=>(const std::chrono::years& rhs) const {
-			return days_ <=> std::chrono::duration_cast<std::chrono::days>(rhs);
-		}
-		[[nodiscard]] auto operator<=>(const std::chrono::months& rhs) const {
-			return days_ <=> std::chrono::duration_cast<std::chrono::days>(rhs);
-		}
-		[[nodiscard]] auto operator<=>(const std::chrono::weeks& rhs) const {
-			return days_ <=> std::chrono::duration_cast<std::chrono::days>(rhs);
-		}
-		[[nodiscard]] auto operator<=>(const std::chrono::days& rhs) const {
-			return days_ <=> rhs;
-		}
-
-		// Arithmetic operators
-		Duration& operator+=(const Duration& other) noexcept {
-			days_ += other.days_;
-			return *this;
-		}
-		Duration& operator-=(const Duration& other) noexcept {
-			days_ -= other.days_;
-			return *this;
-		}
-		Duration& operator*=(int scalar) noexcept {
-			days_ *= scalar;
-			return *this;
-		}
-
-		// Unary negation operator
-		Duration operator-() const noexcept {
-			return Duration(-days_.count());
 		}
 		/*
-		  Will return the year fraction between 2 durations
+		* \brief Cast duration to days only it will concatenate weeks and days, will throw if there is month component in this duration
+		*/
+		explicit operator Days() const;
+		/**
+		* \brief Cast duration to months only it will concatenate years and months, will throw if there is day component in this duration */
+		explicit operator Months() const;
+
+
+		Duration(const Duration&) = default;
+		Duration(Duration&&) = default;
+		Duration& operator =(const Duration&) = default;
+		Duration& operator = (Duration&&) = default;
+		~Duration() = default;
+
+
+		[[nodiscard]] constexpr Years years() const;
+		[[nodiscard]] constexpr Months months() const;
+		[[nodiscard]] constexpr Weeks weeks() const;
+		[[nodiscard]] constexpr Days days() const;
+
+		friend constexpr bool operator==(const Duration& lhs, const Duration& rhs) noexcept;
+		friend constexpr bool operator==(const Duration& lhs, const Years& rhs) noexcept;
+		friend constexpr bool operator== (const Duration& lhs, const Months& rhs) noexcept;
+		friend constexpr bool operator==(const Duration& lhs, const Weeks& rhs) noexcept;
+		friend constexpr bool operator==(const Duration& lhs, const Days& rhs) noexcept;
+
+
+		Duration& operator+= (const Duration& right) noexcept;
+		Duration& operator-=(const Duration& right) noexcept;
+		Duration& operator *= (int quantity) noexcept;
+		Duration operator-() const noexcept;
+
+
+		auto isNull() const { return months_ == 0_M && days_ == 0_D; }
+		/*
+		Will return the year fraction between 2 durations
 		*/
 		double tau(const Duration& rhs);
-		auto isNull() const { return  days_ == 0_D; }
-
+		/*
+		* @brief. To convert into a
+		* */
 	private:
-		std::chrono::days days_;
-		std::chrono::year_month_day from_sys_date_; // this is needed for conversion to years, months, etc
+		friend class Date;
+		friend class Frequency;
+		friend constexpr std::pair<Months, Days> normalized(const Duration& d);
+		constexpr Duration(const Months& m, const Days& d) noexcept: months_(m), days_(d) {}
 
-		void to_ymd_()
-		{
-			//auto sys_days_ = std::chrono::sys_days(std::chrono::days(0)) + days_;
-			from_sys_date_ =std::chrono::year_month_day(std::chrono::sys_days(days_));
-		}
+
+		// Note we only store months and days as the other terms are convertible to those.
+		// It means this period is normalized by construction (comparison is fast and simple) 
+		Months months_{};
+		Days days_{};
+
 	};
 
-	using OptDuration = TP::Optional<Duration>;
+	using OptDuration  = TP::Optional<Duration>;
+	constexpr Years Duration::years() const
+	{
+		return std::chrono::floor<std::chrono::years>(months_);
+	}
 
-	//constexpr Years Duration::years() const
-	//{
-	//	return std::chrono::floor<std::chrono::years>(months_);
-	//}
+	constexpr Months Duration::months() const
+	{
+		return months_ - years();
+	}
 
-	//constexpr Months Duration::months() const
-	//{
-	//	return months_ - years();
-	//}
+	constexpr Weeks Duration::weeks() const
+	{
+		return std::chrono::floor<std::chrono::weeks>(days_);
+	}
+	constexpr Days Duration::days() const
+	{
+		return days_ - weeks();
+	}
+	constexpr std::pair<Months, Days> normalized(const Duration& d)
+	{
+		return std::make_pair(d.months_, d.days_);
+	}
+	// todo: remove as this is mostly wrong way of calculating dcfs
+	constexpr double dcf(const Duration& d, double basis = 365.25)
+	{
+		const auto [ms, ds] = normalized(d);
+		return static_cast<double> (ms.count()) / 12.0
+			+ static_cast<double>(ds.count()) / basis;
+	}
 
-	//constexpr Weeks Duration::weeks() const
-	//{
-	//	return std::chrono::floor<std::chrono::weeks>(days_);
-	//}
+	constexpr bool operator==(const Duration& lhs, const Duration& rhs) noexcept
+	{
+		return lhs.months_ == rhs.months_ && lhs.days_ == rhs.days_;
+	}
+	constexpr bool operator== (const Duration& lhs, const Years& rhs) noexcept
+	{
+		return lhs.months_ == rhs && lhs.days_ == 0_D;
+	}
+	constexpr bool operator == (const Duration& lhs, const Months& rhs) noexcept
+	{
+		return lhs.months_ == rhs && lhs.days_ == 0_D;
+	}
+	constexpr bool operator==(const Duration& lhs, const Weeks& rhs) noexcept
+	{
+		return lhs.days_ == rhs && lhs.months_ == 0_M;
+	}
+	constexpr bool operator== (const Duration& lhs, const Days& rhs) noexcept
+	{
+		return lhs.days_ == rhs && lhs.months_ == 0_M;
+	}
 
-	//constexpr Days Duration::days() const
-	//{
-	//	return days_ - weeks();
-	//}
-
-	//constexpr std::pair<Months, Days> normalized(const Duration& d)
-	//{
-	//	return std::make_pair(d.months_, d.days_);
-	//}
-
-	//// todo: remove as this is mostly wrong way of calculating dcfs
-	//constexpr double dcf(const Duration& d, double basis = 365.25)
-	//{
-	//	const auto[ms, ds] = normalized(d);
-	//	return static_cast<double>(ms.count()) / 12.0
-	//		+ static_cast<double>(ds.count()) / basis;
-	//}
-
-	//constexpr bool operator==(const Duration& lhs, const Duration& rhs) noexcept
-	//{
-	//	return lhs.months_ == rhs.months_ && lhs.days_ == rhs.days_;
-	//}
-
-	//constexpr bool operator==(const Duration& lhs, const Years& rhs) noexcept
-	//{
-	//	return lhs.months_ == rhs && lhs.days_ == 0_D;
-	//}
-
-	//constexpr bool operator==(const Duration& lhs, const Months& rhs) noexcept
-	//{
-	//	return lhs.months_ == rhs && lhs.days_ == 0_D;
-	//}
-
-	//constexpr bool operator==(const Duration& lhs, const Weeks& rhs) noexcept
-	//{
-	//	return lhs.days_ == rhs && lhs.months_ == 0_M;
-	//}
-
-	//constexpr bool operator==(const Duration& lhs, const Days& rhs) noexcept
-	//{
-	//	return lhs.days_ == rhs && lhs.months_ == 0_M;
-	//}
 }
 
 namespace TP
@@ -227,13 +226,13 @@ namespace TP
 			[[nodiscard]] std::string failToParse(const std::string_view& str) const;
 		};
 
-		/*template<>
+		template<>
 		struct Formatter<date_time::Duration>
 		{
 			[[nodiscard]] date_time::OptDuration tryParse(const std::string_view& str) const;
 			[[nodiscard]] std::string str(const date_time::Duration& duration) const;
 			[[nodiscard]] std::string failToParse(const std::string_view& str) const;
-		};*/
+		};
 	}
 }
 

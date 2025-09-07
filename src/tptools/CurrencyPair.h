@@ -5,7 +5,7 @@
 namespace TP
 {
 	struct CurrencyPair;
-	using OptCurrencyPair =std::optional<CurrencyPair>;
+	using OptCurrencyPair =TP::Optional<CurrencyPair>;
 
 	struct TPNIKOPOLIS_IMPEXP CurrencyPair  //: operators::totally_ordered< CurrencyPair>
 	{

@@ -30,7 +30,7 @@ XLOper::~XLOper() {
 	if ((xltype & xltypeStr) && val.str)
 	{
 		//xltype |= xlbitDLLFree;
-		//xLLFree(*this);
+		xLLFree(*this);
 		val.str = nullptr;
 	}
 }

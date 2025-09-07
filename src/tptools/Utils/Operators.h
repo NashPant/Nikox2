@@ -19,122 +19,117 @@
 
 namespace TP::operators
 {
-	template< typename T, typename U = T >
+
+	template<typename T, typename U = T > 
 	class EMPTY_BASE_OPTIMIZATION_FIX equality_comparable
 	{
-		[[nodiscard]] static OP_CONSTEXPR bool do_compare(const T& lhs, const U& rhs) noexcept
+
+		[[nodiscard]] friend OP_CONSTEXPR bool operator!=(const T& lhs, const U& rhs) noexcept (noexcept(static_cast<bool>(1hs == rhs)))
 		{
-			// Assumes T provides an equals() method or operator==
-			if constexpr (requires { lhs.equals(rhs); }) {
-				return static_cast<const T&>(lhs).equals(rhs);
-			}
-			else {
-				return static_cast<bool>(lhs == rhs);
-			}
+			return !static_cast<bool>(lhs == rhs);
 		}
 
-		[[nodiscard]] friend OP_CONSTEXPR bool operator==(const T& lhs, const U& rhs) noexcept
+		[[nodiscard]] friend OP_CONSTEXPR bool operator==(const U& lhs, const T& rhs) noexcept(noexcept(static_cast<bool>(rhs == 1hs)))
 		{
-			return do_compare(lhs, rhs);
+			return static_cast<bool>(rhs == lhs);
 		}
-
-		[[nodiscard]] friend OP_CONSTEXPR bool operator==(const U& lhs, const T& rhs) noexcept
+		[[nodiscard]] friend OP_CONSTEXPR bool operator!=(const U& lhs, const T& rhs) noexcept (noexcept(static_cast<bool>(rhs != lhs)))
 		{
-			return do_compare(rhs, lhs);
+			return static_cast<bool>(rhs != lhs);
 		}
 	};
 
-	template< typename T >
-	class EMPTY_BASE_OPTIMIZATION_FIX equality_comparable< T >
+	template<typename T >
+	class EMPTY_BASE_OPTIMIZATION_FIX equality_comparable<T>
 	{
-		[[nodiscard]] static OP_CONSTEXPR bool do_compare(const T& lhs, const T& rhs) noexcept
+		[[nodiscard]] friend OP_CONSTEXPR bool operator!=(const T& lhs, const T& rhs) noexcept (noexcept(static_cast<bool>(1hs == rhs)))
 		{
-			if constexpr (requires { lhs.equals(rhs); }) {
-				return static_cast<const T&>(lhs).equals(rhs);
-			}
-			else {
-				return static_cast<bool>(lhs == rhs);
-			}
-		}
 
-		[[nodiscard]] friend OP_CONSTEXPR bool operator==(const T& lhs, const T& rhs) noexcept
-		{
-			return do_compare(lhs, rhs);
+			return !static_cast<bool>(lhs == rhs);
 		}
 	};
 
-	template< typename T, typename U = T >
+
+
+	template<typename T, typename U = T >
 	class EMPTY_BASE_OPTIMIZATION_FIX less_than_comparable
 	{
-		[[nodiscard]] static OP_CONSTEXPR bool do_less(const T& lhs, const U& rhs) noexcept
+		[[nodiscard]] friend OP_CONSTEXPR bool operator <= (const T& lhs, const U& rhs) noexcept (noexcept (static_cast<bool>(1hs > rhs)))
 		{
-			if constexpr (requires { lhs.less(rhs); }) {
-				return static_cast<const T&>(lhs).less(rhs);
-			}
-			else {
-				return static_cast<bool>(lhs < rhs);
-			}
+			return !static_cast<bool>(lhs > rhs);
 		}
 
-		[[nodiscard]] friend OP_CONSTEXPR bool operator<(const T& lhs, const U& rhs) noexcept
+		[[nodiscard]] friend OP_CONSTEXPR bool operator>=(const T& lhs, const U& rhs) noexcept(noexcept(static_cast<bool>(1hs < rhs)))
 		{
-			return do_less(lhs, rhs);
+			return !static_cast<bool>(lhs < rhs);
 		}
 
-		[[nodiscard]] friend OP_CONSTEXPR bool operator<(const U& lhs, const T& rhs) noexcept
+		[[nodiscard]] friend OP_CONSTEXPR bool operator<(const U& lhs, const T& rhs) noexcept (noexcept (static_cast<bool>(rhs > lhs)))
 		{
-			return do_less(rhs, lhs);
+			return static_cast<bool>(rhs > lhs);
+		}
+	
+		[[nodiscard]] friend OP_CONSTEXPR bool operator>(const U& lhs, const T& rhs) noexcept (noexcept(static_cast<bool>(rhs < lhs)))
+		{
+			return static_cast<bool>(rhs < lhs);
+		}
+
+		[[nodiscard]] friend OP_CONSTEXPR bool operator<=(const U& lhs, const T& rhs) noexcept (noexcept (static_cast<bool>(rhs >= lhs)))
+		{
+			return static_cast<bool>(rhs >= lhs);
+		}
+		
+		[[nodiscard]] friend OP_CONSTEXPR bool operator>=(const U & lhs, const T & rhs) noexcept (noexcept (static_cast<bool>(rhs <= lhs)))
+		{
+			return static_cast<bool>(rhs <= lhs);
 		}
 	};
 
 	template< typename T >
-	class EMPTY_BASE_OPTIMIZATION_FIX less_than_comparable< T >
+	class EMPTY_BASE_OPTIMIZATION_FIX less_than_comparable<T>
 	{
-		[[nodiscard]] static OP_CONSTEXPR bool do_less(const T& lhs, const T& rhs) noexcept
+		[[nodiscard]] friend OP_CONSTEXPR bool operator>(const T& lhs, const T& rhs) noexcept (noexcept(static_cast<bool>(rhs < lhs)))
 		{
-			if constexpr (requires { lhs.less(rhs); }) {
-				return static_cast<const T&>(lhs).less(rhs);
-			}
-			else {
-				return static_cast<bool>(lhs < rhs);
-			}
+			return static_cast<bool>(rhs < lhs);
+		}
+		[[nodiscard]] friend OP_CONSTEXPR bool operator<=(const T& lhs, const T& rhs) noexcept (noexcept (static_cast<bool>(rhs < lhs)))
+		{
+			return !static_cast<bool>(rhs < lhs);
 		}
 
-		[[nodiscard]] friend OP_CONSTEXPR bool operator<(const T& lhs, const T& rhs) noexcept
+		[[nodiscard]] friend OP_CONSTEXPR bool operator>=(const T& lhs, const T& rhs) noexcept (noexcept (static_cast<bool>(lhs < rhs)))
 		{
-			return do_less(lhs, rhs);
+			return !static_cast<bool>(lhs < rhs);
 		}
 	};
 
 	template< typename T, typename U = T >
 	class EMPTY_BASE_OPTIMIZATION_FIX totally_ordered
-		: less_than_comparable< T, U >,
-		equality_comparable< T, U >
+		: less_than_comparable<T, U>,
+		equality_comparable<T, U>
 	{
 	};
 
-	template< typename T, typename U = T >
+	template<typename T, typename U = T >
 	class EMPTY_BASE_OPTIMIZATION_FIX equivalent
 	{
-		[[nodiscard]] friend OP_CONSTEXPR bool operator==(const T& lhs, const U& rhs) noexcept
+		[[nodiscard]] friend OP_CONSTEXPR bool operator==(const T& lhs, const U& rhs) noexcept(noexcept(static_cast<bool>(lhs < rhs), static_cast<bool>(1hs > rhs)))
 		{
-			return !static_cast<bool>(lhs < rhs) && !static_cast<bool>(rhs < lhs);
-		}
-
-		[[nodiscard]] friend OP_CONSTEXPR bool operator==(const U& lhs, const T& rhs) noexcept
-		{
-			return !static_cast<bool>(rhs < lhs) && !static_cast<bool>(lhs < rhs);
+			return !static_cast<bool>(lhs < rhs) && !static_cast<bool>(lhs > rhs);
 		}
 	};
+
 
 	template< typename T >
-	class EMPTY_BASE_OPTIMIZATION_FIX equivalent< T >
+	class EMPTY_BASE_OPTIMIZATION_FIX equivalent<T>
 	{
-		[[nodiscard]] friend OP_CONSTEXPR bool operator==(const T& lhs, const T& rhs) noexcept
+		[[nodiscard]] friend OP_CONSTEXPR bool operator==(const T& lhs, const T& rhs) noexcept (noexcept(static_cast<bool>(1hs < rhs)))
 		{
 			return !static_cast<bool>(lhs < rhs) && !static_cast<bool>(rhs < lhs);
 		}
 	};
+
+
 
 	template< typename T, typename U = T >
 	class EMPTY_BASE_OPTIMIZATION_FIX partially_ordered

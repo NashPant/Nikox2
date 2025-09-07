@@ -75,7 +75,7 @@ namespace TP
 	//}
 
 	Currency::Currency(const int id)
-		: Currency(maybeGet(id).value_or(currency::NONE))
+		: Currency(maybeGet(id).valueOr(currency::NONE))
 	{
 		if (id == 0)
 		{
@@ -85,7 +85,7 @@ namespace TP
 	}
 
 	Currency::Currency(const std::string_view code)
-		: Currency(maybeGet(code).value_or(currency::NONE))
+		: Currency(maybeGet(code).valueOr(currency::NONE))
 	{
 		if (id == 0)
 		{

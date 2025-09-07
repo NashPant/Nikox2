@@ -1,7 +1,7 @@
 message("VCKPG ROOT is $ENV{VCKPG_ROOT}")
 
 add_library(Nikopolis TPNikopolisRoot.cpp
-)
+ "tpproducts/curveinstruments/instruments.h")
 
 add_subdirectory(tptools)
 add_subdirectory(tpdatetime)
