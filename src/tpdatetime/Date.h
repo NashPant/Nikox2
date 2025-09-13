@@ -43,6 +43,10 @@ namespace TP::date_time
 		 */
 		static Date sysToday() noexcept;
 
+		static constexpr Date from_sys_days(const std::chrono::sys_days& tp) noexcept {
+			return Date(tp);
+		}
+
 		/**
 		 * \brief provides today's date based on local clock
 		 */
@@ -56,6 +60,10 @@ namespace TP::date_time
 		 */
 		explicit Date(const std::string& date, const std::string& fmt = defaultFormat);
 
+		/// \brief Construct from a duration since epoch (e.g. days).
+		constexpr explicit Date(std::chrono::sys_days::duration d) noexcept
+			: serial_{ std::chrono::sys_days{d} } {
+		}
 		/**
 		 * \brief Will throw for invalid dates (e.g. day = 32, month 13)
 		 */
@@ -98,6 +106,12 @@ namespace TP::date_time
 		 */
 		explicit Date(const std::chrono::system_clock::time_point& time);
 
+		/// \brief Returns the duration since the epoch (1970-01-01) in days,
+		///      consistent with std::chrono::time_point::time_since_epoch().
+		[[nodiscard]] constexpr std::chrono::days time_since_epoch() const noexcept {
+			return serial_.time_since_epoch();
+		}
+
 		/**
 		 * \brief Creates a date from an Excel serial (including the 1900 issue)
 		 */
@@ -122,6 +136,10 @@ namespace TP::date_time
 				   Issue here is that 0_D is a valid date.
 		*/
 		bool isNull() const { return serial_ == std::chrono::sys_days(0_D); }
+
+		[[nodiscard]] constexpr std::chrono::sys_days to_sys_days() const noexcept {
+			return serial_;
+		}
 
 		[[nodiscard]] YearMonthDay ymd() const noexcept;
 		[[nodiscard]] YearMonth ym() const noexcept;

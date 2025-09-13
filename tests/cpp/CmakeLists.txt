@@ -52,7 +52,8 @@ tpmaths)
 
 add_executable(tpdatetime_test
 tpdatetime/test_durations.cpp
-tpdatetime/test_date.cpp)
+tpdatetime/test_date.cpp
+tpdatetime/test_datetime.cpp)
 
 target_link_libraries(tpdatetime_test
 GTest::gtest
