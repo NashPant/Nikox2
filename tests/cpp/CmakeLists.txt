@@ -5,13 +5,15 @@ cmake_minimum_required(VERSION 3.22)
 set (CMAKE_CXX_STANDARD 20)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 # Toggle to enable/disable GSL
-option (USE_GSL "Enable GSL library inclusion" OFF) # GSL configuration
+option (USE_GSL "Enable GSL library inclusion" ON) # GSL configuration
  if (USE_GSL)
+	
 	# Option 1: Explicit GSL paths (manually built)
 	set (GSL_ROOT $ENV{GSL_ROOT})
 	set (GSL_INCLUDE_DIR "${GSL_ROOT}")
 	set(GSL_LIBRARY "${GSL_ROOT}/gsl.lib")
 	set(GSL_CBLAS_LIBRARY "${GSL_ROOT}/gslcblas.lib")
+	message ("USing GSL Libs in directory: ${GSL_ROOT}")
 	# Verify GSL paths exist
 	if (NOT EXISTS "${GSL_INCLUDE_DIR}")
 		message (FATAL_ERROR "GSL include directory not found: ${GSL_INCLUDE_DIR}")
@@ -41,14 +43,31 @@ GTest::gtest
 GTest::gtest_main
 tptools)
 
+if (USE_GSL)
+
+add_executable(tpmaths_test
+tpmaths/test_matrix.cpp
+tpmaths/test_gsl.cpp)
+
+target_link_libraries(tpmaths_test
+	GTest::gtest
+	GTest::gtest_main
+	Eigen3::Eigen
+	tpmaths
+	${GSL_LIBRARY} 
+	${GSL_CBLAS_LIBRARY})
+else()
+
 add_executable(tpmaths_test
 tpmaths/test_matrix.cpp)
 
 target_link_libraries(tpmaths_test
-GTest::gtest
-GTest::gtest_main
-Eigen3::Eigen
-tpmaths)
+	GTest::gtest
+	GTest::gtest_main
+	Eigen3::Eigen
+	tpmaths)
+endif()
+
 
 add_executable(tpdatetime_test
 tpdatetime/test_durations.cpp
@@ -60,10 +79,21 @@ GTest::gtest
 GTest::gtest_main
 tpdatetime)
 
+
+add_executable(tpmarketdata_test
+tpmarketdata/test_discount_factors.cpp
+)
+target_link_libraries(tpmarketdata_test
+GTest::gtest
+GTest::gtest_main
+tpmarketdata)
+
+
 message("TEST CMAKE SOURCE DIR: ${CMAKE_SOURCE_DIR}")
 target_include_directories (tptools_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
 target_include_directories (tpmaths_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
 target_include_directories (tpdatetime_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
+target_include_directories (tpmarketdata_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
 # PRIVATE ${GTEST_INCLUDE_DIRS}
 #
 # )
@@ -73,6 +103,7 @@ target_include_directories (tpdatetime_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
 gtest_discover_tests(tptools_test)
 gtest_discover_tests(tpmaths_test)
 gtest_discover_tests(tpdatetime_test)
+gtest_discover_tests(tpmarketdata_test)
 
 add_custom_target (run_all_tests
 COMMAND ${CMAKE_CTEST_COMMAND} --verbose 

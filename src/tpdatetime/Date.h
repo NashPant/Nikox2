@@ -31,7 +31,7 @@ namespace TP::date_time
 	 * @brief structure that holds the date in serial form and has all functionality to handle date based logic
 	 */
 	class TPNIKOPOLIS_IMPEXP  Date final
-		//: TP::operators::totally_ordered<Date>
+	  : TP::operators::totally_ordered<Date>
 	{
 	public:
 		// ReSharper disable CppInconsistentNaming

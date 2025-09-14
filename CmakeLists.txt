@@ -17,6 +17,12 @@ add_definitions(-DTPNIKOPOLIS_EXPORTS)
 add_definitions(-D_HAS_TR1_NAMESPACE)
 add_definitions(-DTPSTATIC)
 
+#include directory 
+## This is the old / global CMake style (pre-modern CMake).
+# These calls add those folders to the global include search path for every target defined after these lines.
+#include_directories(${CMAKE_SOURCE_DIR})
+#include_directories(${CMAKE_SOURCE_DIR}/src)
+#include_directories(${CMAKE_SOURCE_DIR}/interface)
 
 
 # Set output directories for all targets
@@ -55,6 +61,7 @@ if(MSVC)
 	add_compile_options(/std:c++${CMAKE_CXX_STANDARD})
 	#add_compile_options(/Zx:preprocesor})
 	add_compile_options(/utf-8)
+    add_compile_options(/Zc:preprocessor /permissive-)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4828 /wd4858")
 else()
     set(USER_DIR "$ENV{HOME}")
@@ -64,7 +71,7 @@ endif()
 #find_package(Boost REQUIRED COMPONENTS core system)
 find_package(Eigen3 CONFIG REQUIRED)  
 find_package(fmt CONFIG REQUIRED)  
-#find_package(boost CONFIG REQUIRED)  
+find_package(magic_enum CONFIG REQUIRED)  
 
 # # Include project settings
  #include(cmake/StandardProjectSettings.cmake)

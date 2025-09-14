@@ -1,6 +1,7 @@
 #pragma once
 #include "TPNikopolisUtils.h"
 //#include "TPTools/Utils/Operators.h"
+#include "tptools/serialisation/include.h"
 #include "TPNikopolisUtils.h"
 #include "TPTools/Utils/Formatting.h"
 #include "TPTools/Utils/TPOptional.h"
@@ -96,6 +97,8 @@ namespace TP
 			archive(d.code, d.id, d.minorUnit, d.name, d.onshore, d.official);
 		}*/
 		//static std::map< CCY_TYPE, Currency> tpCcytoCurrencyMap;
+	private:
+		PROPERTIES(Currency, id);
 	};
 
 	constexpr bool operator==(Currency const & lhs, Currency const & rhs) noexcept { return lhs.id == rhs.id; }

@@ -3,6 +3,7 @@
   "dependencies": [
     "eigen3",
     "fmt",
-    "gtest"
+    "gtest",
+    "magic-enum"
   ]
 }

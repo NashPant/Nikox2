@@ -16,10 +16,10 @@ message(STATUS "TOOLS_SOURCE_FILES = ${TOOLS_SOURCE_FILES}")
 # TPTools/CMakeLists.txt
 # Check if TPSTATIC is defined
 if(DEFINED TPSTATIC OR BUILD_TPTOOLS_STATIC)
-    message(STATUC "TPtools compiling Static Lib")
+    message(STATUS "TPtools compiling Static Lib")
     add_library(tptools STATIC ${TOOLS_SOURCE_FILES})
 else()
-     message(STATUC "TPtools compiling Shared Lib")
+     message(STATUS "TPtools compiling Shared Lib")
     add_library(tptools SHARED ${TOOLS_SOURCE_FILES})
 endif()
 

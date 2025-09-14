@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 project(pyNiko LANGUAGES CXX)
 
+set(PARENT_DIRECTORY ${CMAKE_SOURCE_DIR}/..)
+message(STATUS "PYNIKO Current Source Directory: ${CMAKE_CURRENT_SOURCE_DIR}")
+message(STATUS "PYNIKO PARENT Directory: ${PARENT_DIRECTORY}")
+
+
 # Ensure we build a shared library with .pyd extension
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
@@ -77,6 +82,7 @@ endif()
 
 target_link_libraries(pyNiko PRIVATE
     Python3::Python
+    magic_enum::magic_enum
 )
 
 if(DEFINED ENV{PYTHON_LIB_INCLUDE})

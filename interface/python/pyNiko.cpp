@@ -7,7 +7,16 @@
 //#include "pybind11_json.h"
 
 #include <pybind11/cast.h>
+#include "pybind_enum_utils.h"
 //#include "VariantWrapper.h"
+
+enum class OptionType
+{
+	PUT = 0,
+	CALL = 1,
+	STRADDLE = 2
+};
+
 
 //include "VolFunctions.h"
 //#include "TPNiCoPolisVersion.h"
@@ -126,7 +135,12 @@ PYBIND11_MODULE(pyNiko, m) {
 		/*
 		 * @brief. TESTING SECTION
 		 */
+	TP::utils::expose_enum<OptionType>(m, "OptionType");
+
 	m.def("square", &square, "A function that squares its input", py::arg("x"));
+
+	
+
 	//m.def("take_json", &take_json, "pass py::object to a C++ function that takes an nlohmann::json");
 	//m.def("return_json", &return_json, "return py::object from a C++ function that returns an nlohmann::json");
 	/*
