@@ -1,17 +1,26 @@
 
 #find_package(Armadillo CONFIG REQUIRED)
 
+set(EXTERNAL_DIRECTORY ${CMAKE_SOURCE_DIR}/external)
+message(STATUS "TPMATHS Current Source Directory: ${CMAKE_CURRENT_SOURCE_DIR}")
+message(STATUS "TPMATHS EXTERNAL_DIRECTORY Directory: ${EXTERNAL_DIRECTORY}")
+
 file(GLOB_RECURSE MATHS_SOURCE_FILES
 "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
-"${CMAKE_CURRENT_SOURCE_DIR}/*.c"
- "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
- "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+"${CMAKE_CURRENT_SOURCE_DIR}/*.c")
+ #"${CMAKE_CURRENT_SOURCE_DIR}/*.h"
+ #"${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
 
 
  add_library(tpmaths STATIC ${MATHS_SOURCE_FILES})
 
+ target_include_directories(tpmaths PRIVATE
+    ${EXTERNAL_DIRECTORY}
+)
+
  target_link_libraries(tpmaths PUBLIC 
  Eigen3::Eigen
  tptools
- fmt::fmt)
+ fmt::fmt
+ Boost::headers)
 

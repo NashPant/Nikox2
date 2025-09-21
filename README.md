@@ -28,8 +28,23 @@ pyNiko using pybind11 exposes most of the functions to python
   "cacheVariables": {
   "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
   "VCPKG_MANIFEST_MODE": "ON"
-}
-1. 
+}  
+1. Step 1: Disable Visual Studio's vcpkg Integration
+   Disable VS's built-in vcpkg
+cd "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\vcpkg"
+.\vcpkg.exe integrate remove
+
+ Step 2: Integrate Your Project vcpkg
+bash# Integrate your local vcpkg
+cd C:\development\Nikopolis\ThirdPArty\vcpkg
+.\vcpkg.exe integrate install
+
+Step 3. Change CmakePresets.json
+"CMAKE_TOOLCHAIN_FILE": "C:/development/Nikopolis/ThirdPArty/vcpkg/scripts/buildsystems/vcpkg.cmake"
+
+So now everytime you open a new VS instance it will use your local vcpkg and not the built in one.
+How come though the environment variable VCPKG_ROOT is still pointing to the built in vcpkg ?
+
 
 ### Installing
 
@@ -55,7 +70,10 @@ IF however you have only 1 Jupyter notebook open and select all listed python pr
 Contributors names and contact info
 
 * Thanos Pantas
-* Karim Sadli
+
+*Old vckpg baseline hash* :  "builtin-baseline": "6ecbbbdf31cba47aafa7cf6189b1e73e10ac61f8",
+
+Older manifest hash: "builtin-baseline": "d5ec528843d29e3a52d745a64b469f810b2cedbf",
 
 ex. [@DomPizzie](https://twitter.com/dompizzie)
 

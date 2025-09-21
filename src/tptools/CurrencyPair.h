@@ -38,6 +38,8 @@ namespace TP
 		constexpr CurrencyPair(Currency lhs, Currency rhs) noexcept:
 			left(std::move(lhs)), right(std::move(rhs))
 		{}
+
+		PROPERTIES(CurrencyPair, left, right);
 	};
 
 	inline namespace formatting

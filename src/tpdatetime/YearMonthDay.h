@@ -71,14 +71,22 @@ namespace TP::date_time
 		using std::chrono::Saturday;
 		using std::chrono::Sunday;
 
+		constexpr auto sun = std::chrono::Sunday;
+		constexpr auto sat = std::chrono::Saturday;
+		constexpr auto fri = std::chrono::Friday;
+		constexpr auto thu = std::chrono::Thursday;
+		constexpr auto wed = std::chrono::Wednesday;
+		constexpr auto tue = std::chrono::Tuesday;
+		constexpr auto mon = std::chrono::Monday;
+
 		// ReSharper disable CppInconsistentNaming
-		//constexpr auto Sun = sun;
-		//constexpr auto Mon = mon;
-		//constexpr auto Tue = tue;
-		//constexpr auto Wed = wed;
-		//constexpr auto Thu = thu;
-		//constexpr auto Fri = fri;
-		//constexpr auto Sat = sat;
+		constexpr auto Sun = sun;
+		constexpr auto Mon = mon;
+		constexpr auto Tue = tue;
+		constexpr auto Wed = wed;
+		constexpr auto Thu = thu;
+		constexpr auto Fri = fri;
+		constexpr auto Sat = sat;
 		// ReSharper restore CppInconsistentNaming
 	}
 

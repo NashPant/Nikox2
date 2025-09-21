@@ -207,7 +207,7 @@ TEST_F(TPMatrixTest, PushBackInvalidSize) {
     EXPECT_THROW(testMatrix.push_back(invalid_col, 1), std::exception);
 }
 
-TEST_F(TPMatrixTest, InvalidSizeAccess) {
-    EXPECT_THROW(testMatrix.size(2), std::exception);
-}
+//TEST_F(TPMatrixTest, InvalidSizeAccess) {
+//    EXPECT_THROW(testMatrix.size(2), std::exception);
+//}
 

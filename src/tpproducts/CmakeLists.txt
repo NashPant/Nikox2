@@ -1,5 +1,5 @@
 
-file(GLOB_RECURSE DATETIME_SOURCE_FILES
+file(GLOB_RECURSE PRODUCTS_SOURCE_FILES
 "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
  "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
  "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
@@ -8,9 +8,9 @@ file(GLOB_RECURSE DATETIME_SOURCE_FILES
  # Find specific Boost components
 # find_package(Boost REQUIRED COMPONENTS core system)
 
- add_library(tpdatetime STATIC ${DATETIME_SOURCE_FILES})
+ add_library(tpproducts STATIC ${PRODUCTS_SOURCE_FILES})
 
- target_link_libraries(tpdatetime PRIVATE 
+ target_link_libraries(tpproducts PRIVATE 
  tptools
- fmt::fmt
- Boost::headers)
+ tpdatetime
+ fmt::fmt)

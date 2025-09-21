@@ -5,9 +5,9 @@
 
 /////////////////////////////////////////////////////////////////////////////
 //
-//  This program is the CONFIDENTIAL and PROPRIETARY property of           
-//   Athanasios Pantas. Unauthorized use and reproduction
-//	of this program is strictly prohibited.                  
+//  This program is the  property of           
+//   Athanasios Pantas. Feel free to use, no guarantees from me.
+//	                  
 //
 //	Copyright (c) 2003- Athanasios Pantas.
 //	ALL RIGHTS RESERVED.                                                 

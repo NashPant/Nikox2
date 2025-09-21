@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////
 //
-//  This program is the CONFIDENTIAL and PROPRIETARY property of'
-//   Athanasios Pantas. Unauthorized use and reproduction'
-//  of this program is strictly prohibited.
+//  This program is the  property of 
+//   Athanasios Pantas. Feel free to use, but no guarantees from me!
+//  
 //
 // Copyright (C) 2003  - Nikopolis
 //  Copyright (C) 2003 - Athanasios Pantas.

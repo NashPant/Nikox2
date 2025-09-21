@@ -69,8 +69,12 @@ endif()
 
 # Add required packages
 #find_package(Boost REQUIRED COMPONENTS core system)
+find_package(Boost REQUIRED COMPONENTS headers)
 find_package(Eigen3 CONFIG REQUIRED)  
 find_package(fmt CONFIG REQUIRED)  
+message(STATUS "===============================================================")
+message(STATUS "fmt version: ${fmt_VERSION}")
+message(STATUS "===============================================================")
 find_package(magic_enum CONFIG REQUIRED)  
 
 # # Include project settings
@@ -95,6 +99,7 @@ find_package(magic_enum CONFIG REQUIRED)
 #find_package (Python3 COMPONENTS Interpreter Development REQUIRED)
 
 add_subdirectory(external/pybind11)
+add_subdirectory(external/bspline)
 # # Add subdirectories
 # add_subdirectory(external)
 add_subdirectory(src)
