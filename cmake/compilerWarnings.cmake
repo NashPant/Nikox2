@@ -13,6 +13,8 @@ function(set_target_warnings target)
         /w14263
         /w44265
         /w14928
+        /w4804
+        /w5033
     )
     
     set(CLANG_WARNINGS
