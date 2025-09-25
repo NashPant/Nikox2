@@ -1,7 +1,7 @@
 #pragma once
 
 #include <TPNikopolisUtils.h>
-#include "TPTools/Time/TPDate.h"
+//#include "TPTools/Time/TPDate.h"
 //#include "TPDateTime/Cut.h"
 #include "TPDateTime/YearMonthDay.h"
 #include "TPDateTime/Durations.h"
@@ -21,12 +21,12 @@ namespace TP::date_time
 	class TPNIKOPOLIS_IMPEXP IMMHelper final
 	{
 	public:
-		IMMHelper(const TPDate& asof) :asof_(asof)
+		IMMHelper(const Date& asof) :asof_(asof)
 		{}
 
 		
-		TPDate nextIMMDate(const Months& duration, const WeekdayIndexed& weekdayIndex) const;
-		TPDate prevIMMDate(const Months& duration, const WeekdayIndexed& weekdayIndex) const;
+		Date nextIMMDate(const Months& duration, const WeekdayIndexed& weekdayIndex) const;
+		Date prevIMMDate(const Months& duration, const WeekdayIndexed& weekdayIndex) const;
 
 		bool isIMMDate(const Months& duration, const WeekdayIndexed& weekdayIndex);
 	//	static TPDate toTPDate(const Date& asof)
@@ -45,7 +45,7 @@ namespace TP::date_time
 		static size_t whichWeek(const Date& asof);
 
 	private:
-		TPDate  asof_;
+		Date  asof_;
 	};
 
 	/*

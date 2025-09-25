@@ -7,13 +7,13 @@
 
 namespace TP::date_time
 {
-	TPDate IMMHelper::nextIMMDate(const Months& duration, const WeekdayIndexed& weekdayIndex) const
+	Date IMMHelper::nextIMMDate(const Months& duration, const WeekdayIndexed& weekdayIndex) const
 	{
 		auto it = IMMIterator(asof_, duration, weekdayIndex);
 		return *++it;
 	}
 
-	TPDate IMMHelper::prevIMMDate(const Months& duration, const WeekdayIndexed& weekdayIndex) const
+	Date IMMHelper::prevIMMDate(const Months& duration, const WeekdayIndexed& weekdayIndex) const
 	{
 		auto it = IMMIterator(asof_, duration, weekdayIndex);
 		return *--it;

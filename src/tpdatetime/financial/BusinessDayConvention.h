@@ -1,5 +1,5 @@
 #pragma once
-//#include "TPTools/Utils/TPEnum.h"
+#include "TPTools/Utils/TPEnum.h"
 #include "TPTools/TPException.h"
 #include "TPTools/Time/TPDate.h"
 #include <map>
@@ -7,26 +7,26 @@
 namespace TP::date_time
 {
 
-	enum class BusinessDayConvention
-	{
-		None = 0,
-		F, // Following
-		P, // Preceding
-		MF, // Modified Following
-		MP  // Modified Preceding
-	};
+	//enum class BusinessDayConvention
+	//{
+	//	None = 0,
+	//	F, // Following
+	//	P, // Preceding
+	//	MF, // Modified Following
+	//	MP  // Modified Preceding
+	//};
 
-	//TP_ENUM_CREATE(BusinessDayConvention, None, F, P, MF, MP)
-	//	TP_ENUM_VALUE(None, "None")
-	//	TP_ENUM_VALUE(F, "F")
-	//	TP_ENUM_VALUE(F, "Following")
-	//	TP_ENUM_VALUE(P, "P")
-	//	TP_ENUM_VALUE(P, "Proceeding")
-	//	TP_ENUM_VALUE(MF, "MF")
-	//	TP_ENUM_VALUE(MF, "ModifiedFollowing")
-	//	TP_ENUM_VALUE(MP, "MP")
-	//	TP_ENUM_VALUE(MP, "ModifiedProceeding")
-	//	TP_ENUM_CREATE_END(BusinessDayConvention)
+	TP_ENUM_CREATE(BusinessDayConvention, None, F, P, MF, MP)
+		TP_ENUM_VALUE(None, "None")
+		TP_ENUM_VALUE(F, "F")
+		TP_ENUM_VALUE(F, "Following")
+		TP_ENUM_VALUE(P, "P")
+		TP_ENUM_VALUE(P, "Proceeding")
+		TP_ENUM_VALUE(MF, "MF")
+		TP_ENUM_VALUE(MF, "ModifiedFollowing")
+		TP_ENUM_VALUE(MP, "MP")
+		TP_ENUM_VALUE(MP, "ModifiedProceeding")
+		TP_ENUM_CREATE_END(BusinessDayConvention)
 
 
 	//using ROLL_CONVENTION = BusinessDayConvention;

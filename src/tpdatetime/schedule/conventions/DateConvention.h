@@ -44,7 +44,7 @@ namespace TP {
 
 			virtual Date rollDate(const Date& date) const = 0;
 
-			//virtual std::map<std::string, TPAny> attributes(const std::optional<std::string> prefix = std::nullopt) const;
+			virtual std::map<std::string, TPAny> attributes(const std::optional<std::string> prefix = std::nullopt) const;
 
 		protected:
 			CalendarConstPtr calendar_;

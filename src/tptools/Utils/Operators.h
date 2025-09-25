@@ -42,7 +42,7 @@ namespace TP::operators
 	template<typename T >
 	class EMPTY_BASE_OPTIMIZATION_FIX equality_comparable<T>
 	{
-		[[nodiscard]] friend OP_CONSTEXPR bool operator!=(const T& lhs, const T& rhs) noexcept (noexcept(static_cast<bool>(1hs == rhs)))
+		[[nodiscard]] friend OP_CONSTEXPR bool operator!=(const T& lhs, const T& rhs) noexcept (noexcept(static_cast<bool>(lhs == rhs)))
 		{
 
 			return !static_cast<bool>(lhs == rhs);
@@ -54,12 +54,12 @@ namespace TP::operators
 	template<typename T, typename U = T >
 	class EMPTY_BASE_OPTIMIZATION_FIX less_than_comparable
 	{
-		[[nodiscard]] friend OP_CONSTEXPR bool operator <= (const T& lhs, const U& rhs) noexcept (noexcept (static_cast<bool>(1hs > rhs)))
+		[[nodiscard]] friend OP_CONSTEXPR bool operator <= (const T& lhs, const U& rhs) noexcept (noexcept (static_cast<bool>(lhs > rhs)))
 		{
 			return !static_cast<bool>(lhs > rhs);
 		}
 
-		[[nodiscard]] friend OP_CONSTEXPR bool operator>=(const T& lhs, const U& rhs) noexcept(noexcept(static_cast<bool>(1hs < rhs)))
+		[[nodiscard]] friend OP_CONSTEXPR bool operator>=(const T& lhs, const U& rhs) noexcept(noexcept(static_cast<bool>(lhs < rhs)))
 		{
 			return !static_cast<bool>(lhs < rhs);
 		}

@@ -13,14 +13,14 @@ namespace TP {
 		//	businessDayLag_ = businessDayLag;
 		//}
 
-		//std::map<std::string, TPAny> DateConvention::attributes(const std::optional<std::string> prefix) const
-		//{
-		//	auto prefx = prefix.value_or("");
-		//	std::map<std::string, TPAny> res{ {prefx+ "Calendar", TPAny(calendar_->getID())},
-		//	{prefx+"lag", TPAny(int(businessDayLag_))} };
-		//	
-		//	return res;
-		//}
+		std::map<std::string, TPAny> DateConvention::attributes(const std::optional<std::string> prefix) const
+		{
+			auto prefx = prefix.value_or("");
+			std::map<std::string, TPAny> res{ {prefx+ "Calendar", TPAny(calendar_->getID())},
+			{prefx+"lag", TPAny(int(businessDayLag_))} };
+			
+			return res;
+		}
 
 	}
 }
