@@ -3,13 +3,14 @@
 #include "TPDateTime/Date.h"
 #include "TPDateTime/Calendar.h"
 #include  "TPNikopolisUtils.h"
+#include "TPDateTime/financial/BusinessDayConvention.h"
 //#include 
 
 namespace TP::date_time
 {
 	// fwd declarations
 	class  Tenor;
-	class  BusinessDayConvention;
+	//class  BusinessDayConvention;
 	struct CurrencyLag;
 	struct BusinessDaysLag;
 

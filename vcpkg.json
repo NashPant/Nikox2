@@ -6,9 +6,12 @@
     "gtest",
     "magic-enum",
     "boost-icl",
+    "boost-filesystem",
     "openblas",
     "glog",
-    "ceres"
+    "ceres",
+    "cereal",
+    "nlohmann-json"
   ]
 }
 

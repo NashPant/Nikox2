@@ -1,6 +1,6 @@
 #include "DateAdjustment.h"
 
-#include "TPDateTime/financial/BusinessDayConvention.h"
+
 #include "TPDateTime/financial/Lags.h"
 #include "TPDateTime/CalendarProvider.h"
 #include "TPDateTime/Tenor.h"

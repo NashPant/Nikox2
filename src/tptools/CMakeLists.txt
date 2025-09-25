@@ -24,7 +24,9 @@ else()
 endif()
 
 target_link_libraries(tptools PRIVATE
-        fmt::fmt)
+        fmt::fmt
+        cereal::cereal
+        nlohmann_json::nlohmann_json)
 # 1. Add include directory for tpformulae private headers
 # Or using generator expressions
 target_include_directories(tptools

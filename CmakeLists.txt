@@ -69,9 +69,13 @@ endif()
 
 # Add required packages
 #find_package(Boost REQUIRED COMPONENTS core system)
-find_package(Boost REQUIRED COMPONENTS headers)
+find_package(Boost REQUIRED COMPONENTS headers filesystem system)
+#find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(Eigen3 CONFIG REQUIRED)  
-find_package(fmt CONFIG REQUIRED)  
+find_package(fmt CONFIG REQUIRED) 
+find_package(cereal REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
+
 message(STATUS "===============================================================")
 message(STATUS "fmt version: ${fmt_VERSION}")
 message(STATUS "===============================================================")
