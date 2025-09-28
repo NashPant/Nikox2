@@ -6,6 +6,12 @@
 namespace TP::curves
 {
 
+	inline double curve_year_fraction(date_time::Date d1, date_time::Date d2)
+	{
+		//return std::chrono::duration<double, std::ratio<365, 1>>(d1 - d2).count();
+		return (d1 - d2).count() / 365.0;
+	}
+
 	// helper function to prepare flat - b-spline curve segments
 	inline std::vector<date_time::Date> divide_dates(std::vector<date_time::Date> dates,
 		date_time::Date cutoff_date, bool dates_left = true,

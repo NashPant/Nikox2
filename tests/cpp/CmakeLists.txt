@@ -43,11 +43,13 @@ GTest::gtest
 GTest::gtest_main
 tptools)
 
+# IS USE GSL ADD GSL
 if (USE_GSL)
 
 add_executable(tpmaths_test
 tpmaths/test_matrix.cpp
-tpmaths/test_gsl.cpp)
+tpmaths/test_gsl.cpp
+tpmaths/test_bspline.cpp)
 
 target_link_libraries(tpmaths_test
 	GTest::gtest
@@ -56,10 +58,12 @@ target_link_libraries(tpmaths_test
 	tpmaths
 	${GSL_LIBRARY} 
 	${GSL_CBLAS_LIBRARY})
+# NOT USING GSL
 else()
-
+message (STATUS "NOT USING GSL ..............") 
 add_executable(tpmaths_test
-tpmaths/test_matrix.cpp)
+tpmaths/test_matrix.cpp
+tpmaths/test_bspline.cpp)
 
 target_link_libraries(tpmaths_test
 	GTest::gtest
@@ -91,7 +95,7 @@ tpmarketdata)
 
 message("TEST CMAKE SOURCE DIR: ${CMAKE_SOURCE_DIR}")
 target_include_directories (tptools_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
-target_include_directories (tpmaths_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
+target_include_directories (tpmaths_test PRIVATE ${CMAKE_SOURCE_DIR}/src/ )
 target_include_directories (tpdatetime_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
 target_include_directories (tpmarketdata_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
 # PRIVATE ${GTEST_INCLUDE_DIRS}

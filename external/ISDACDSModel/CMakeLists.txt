@@ -8,8 +8,10 @@ set(CMAKE_CXX_STANDARD 20)
 #setup()
 
 message (STATUS "ISDACDSModel CURRENT SOURCE DIR: ${CMAKE_CURRENT_SOURCE_DIR}")
+
 if (MSVC)
 	set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+	add_compile_options(/wd4804 /wd5033)
 endif()
 
 file (GLOB C_SRC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c")

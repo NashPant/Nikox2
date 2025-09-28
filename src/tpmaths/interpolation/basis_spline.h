@@ -4,7 +4,8 @@
 #include <bspline/Core.h>
 // #include <bspline/interpolation/interpolation.h>
 #include <concepts>
-//#include <utils/arrays.h>
+#include "tptools/arrays.h"
+
 #include <vector>
 namespace TP::maths
 {
@@ -248,42 +249,42 @@ namespace TP::maths
 			const Eigen::ArrayXXd& dS_basis_outer);
 
 
-	//inline auto clamped_3rd_order_spline_basis_functions(const Eigen::ArrayXd& ns)
-	//{
-	//	constexpr size_t SPLINE_ORDER = 3;
-	//	std::vector<double> v_y(ns.data(), ns.data() + ns.size());
-	//	std::vector<double> knots =
-	//		utils::pad_vector(v_y, SPLINE_ORDER, SPLINE_ORDER);
-	//	return bspline::generateBSplines<SPLINE_ORDER>(knots);
-	//}
+	inline auto clamped_3rd_order_spline_basis_functions(const Eigen::ArrayXd& ns)
+	{
+		constexpr size_t SPLINE_ORDER = 3;
+		std::vector<double> v_y(ns.data(), ns.data() + ns.size());
+		std::vector<double> knots =
+			tools::pad_vector(v_y, SPLINE_ORDER, SPLINE_ORDER);
+		return bspline::generateBSplines<SPLINE_ORDER>(knots);
+	}
 
 
-	//template <typename T, size_t order>
-	//inline auto clamped_spline_basis_functions(const std::vector<T>& xs)
-	//{
-	//	static_assert(order >= 1, "Order may not be zero.");
-	//	std::vector<double> v_xs(xs.data(), xs.data() + xs.size());
-	//	std::vector<double> knots = utils::pad_vector(v_xs, order, order);
-	//	return bspline::generateBSplines<order>(knots);
-	//}
+	template <typename T, size_t order>
+	inline auto clamped_spline_basis_functions(const std::vector<T>& xs)
+	{
+		static_assert(order >= 1, "Order may not be zero.");
+		std::vector<double> v_xs(xs.data(), xs.data() + xs.size());
+		std::vector<double> knots = tools::pad_vector(v_xs, order, order);
+		return bspline::generateBSplines<order>(knots);
+	}
 
 
-	//template <typename B, typename S>
-	//auto build_symmetric_matrix(const B& b, const std::vector<S>& basis)
-	//{
-	//	const auto n_bases = basis.size();
-	//	Eigen::MatrixXd M(n_bases, n_bases);
-	//	for (auto i = 0; i < n_bases; ++i)
-	//	{
-	//		for (auto j = 0; j < n_bases; ++j)
-	//		{
-	//			const auto val = b(basis[i], basis[j]);
-	//			M(i, j) = val;
-	//			M(j, i) = val;
-	//		}
-	//	}
-	//	return M;
-	//}
+	template <typename B, typename S>
+	auto build_symmetric_matrix(const B& b, const std::vector<S>& basis)
+	{
+		const auto n_bases = basis.size();
+		Eigen::MatrixXd M(n_bases, n_bases);
+		for (auto i = 0; i < n_bases; ++i)
+		{
+			for (auto j = 0; j < n_bases; ++j)
+			{
+				const auto val = b(basis[i], basis[j]);
+				M(i, j) = val;
+				M(j, i) = val;
+			}
+		}
+		return M;
+	}
 
 
 	template <typename B, typename S>

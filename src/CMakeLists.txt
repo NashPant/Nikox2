@@ -1,7 +1,7 @@
 message("VCKPG ROOT is $ENV{VCKPG_ROOT}")
 
 add_library(Nikopolis TPNikopolisRoot.cpp
- "tpproducts/curveinstruments/instruments.h" "tpproducts/curveinstruments/rate_futures.h" "tpmarketdata/rates_curve_data.h" "tpmarketdata/marketcurves/discount_factors.h" "tpmodels/curves/discount_curve.h" "tpmodels/curves/curve_utils.h")
+ "tpproducts/curveinstruments/instruments.h" "tpproducts/curveinstruments/rate_futures.h" "tpmarketdata/rates_curve_data.h" "tpmarketdata/marketcurves/discount_factors.h" "tpmodels/curves/discount_curve.h" "tpmodels/curves/curve_utils.h" "tpmodels/curves/discount_curve.cpp")
 
 add_subdirectory(tptools)
 add_subdirectory(tpdatetime)

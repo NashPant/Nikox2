@@ -168,6 +168,15 @@ namespace TP
 }
 
 
+template <typename T> using Ptr = std::shared_ptr<T>;
+template <typename T> using CPtr = std::shared_ptr<const T>;
+
+template<typename T, typename... Ts> auto makeCptr(Ts&&... args)
+{
+	using DecayedT = std::decay_t<T>;
+	return std::make_shared<const DecayedT>(std::forward<Ts>(args)...);
+}
+
 #define FWD_DECLARE_SHAREDPTR(T)\
 class T;                     \
 using T##ConstPtr = std::shared_ptr<const T>;
