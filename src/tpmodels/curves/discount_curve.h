@@ -10,6 +10,7 @@
 #include <tptools/serialisation/include.h>
 #include "curve_utils.h"
 #include <tpmarketdata/marketcurves/discount_factors.h>
+#include "tpmaths/interpolation/curve.h"
 //
 namespace TP::curves
 {
@@ -266,27 +267,27 @@ namespace TP::curves
 			_year_fractions);
 	};
 
-		template <size_t order>
-		std::array<math::Boundary<double>, order - 1> get_boundaries()
-		{
-			static_assert (order >= 1, "Order may not be zero.");
-			if constexpr (order == 2)
-				return { math::Boundary<double> { math::Node::FIRST, 2, 0.0 } };
-			else if constexpr (order == 3)
-				return { math::Boundary<double> { math::Node::FIRST, 3, 0.0 },
-				math::Boundary<double> { math::Node::LAST, 3, 0.0 } };
-			else if constexpr (order == 4)
-				return { math::Boundary<double> { math: : Node::FIRST, 3, 0.0},
-				math::Boundary<double> { math::Node::LAST, 3, 0.0 },
-				math::Boundary<double> { math: : Node::LAST, 4, 0.0 } };
-			else if constexpr (order == 5)
-				return { math::Boundary<double> { math: : Node::FIRST, 3, 0.0 },
-				math: : Boundary<double> { math::Node::FIRST, 4, 0.0},
-				math::Boundary<double> { math::Node::LAST, 3, 0.0 },
-				math::Boundary<double> { math: : Node::LAST, 4, 0.0 } };
-			else
-				return {};
-		};
+	template <size_t order>
+	std::array<TP::maths::Boundary<double>, order - 1> get_boundaries()
+	{
+		static_assert (order >= 1, "Order may not be zero.");
+		if constexpr (order == 2)
+			return { TP::maths::Boundary<double> { TP::maths::Node::FIRST, 2, 0.0 } };
+		else if constexpr (order == 3)
+			return { TP::maths::Boundary<double> { TP::maths::Node::FIRST, 3, 0.0 },
+			TP::maths::Boundary<double> { TP::maths::Node::LAST, 3, 0.0 } };
+		else if constexpr (order == 4)
+			return { Boundary<double> { TP::maths::Node::FIRST, 3, 0.0},
+			Boundary<double> { TP::maths::Node::LAST, 3, 0.0 },
+			Boundary<double> { TP::maths::Node::LAST, 4, 0.0 } };
+		else if constexpr (order == 5)
+			return { Boundary<double> { TP::maths::Node::FIRST, 3, 0.0 },
+			TP::maths::Boundary<double> { TP::maths::Node::FIRST, 4, 0.0},
+			TP::maths::Boundary<double> { TP::maths::Node::LAST, 3, 0.0 },
+			TP::maths::Boundary<double> { TP::maths::Node::LAST, 4, 0.0 } };
+		else
+			return {};
+	}
 
 	//std::shared_ptr<const DiscountCurve> create_discount_curve(
 	//	const std::vector<Date>& dates,

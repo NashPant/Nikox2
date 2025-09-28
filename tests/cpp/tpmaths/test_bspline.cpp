@@ -6,8 +6,6 @@
 
 using namespace TP::maths;
 
-
-
 TEST(CurveOrder1, InRangeInterpolation)
 {
 	const std::vector<double> xs1{ 0.0, 1.0, 2.0 };
